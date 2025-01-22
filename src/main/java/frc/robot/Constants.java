@@ -16,4 +16,27 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class CoralConstants {
+    public static final double kP = 0.01; // TO DO - tune PID
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    public enum CoralStates{
+      kRest(0),
+      kL1(0),  //TO DO - find encoder values
+      kL2(0),
+      kL3(0),
+      kL4(0),
+      kSource(0);
+      private double coralSetpoint;
+
+      private CoralStates(double coralSetpoint){
+        this.coralSetpoint = coralSetpoint;
+      }
+
+      public double getCoralSetpoint(){
+        return coralSetpoint;
+      }
+    }
+  }
 }
