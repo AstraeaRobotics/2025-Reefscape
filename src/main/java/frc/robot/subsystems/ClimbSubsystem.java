@@ -24,15 +24,38 @@ public class ClimbSubsystem extends SubsystemBase {
   /** Creates a new ClimbSubsystem. */
   private TalonFX m_climbMotor;
   
-  
+  Slot0Configs m_climbConfigs;
+  double desiredPosition;
+  PositionVoltage m_climbPosition;
+
   public ClimbSubsystem() {
     m_climbMotor = new TalonFX(0);
+    m_climbConfigs = new Slot0Configs();
+    //configureMotors();
+    m_climbPosition = new PositionVoltage(0).withSlot(0);
+
+    desiredPosition = 0;
+
   }
-  public void setMotor(double speed) {
-    m_climbMotor.set(speed);
+  public void configureMotors() {
+    m_climbConfigs.kS = 0.0;
+    m_climbConfigs.kV = 0.0;
+    m_climbConfigs.kP = 0.0;
+    m_climbConfigs.kI = 0.0;
+    m_climbConfigs.kD = 0.0;
+
   }
-  public double getPosition() {
+  public void spinClimbMotor(double position) {
+    m_climbMotor.setControl(m_climbPosition.withPosition(position));
+  }
+  public double getClimbPosition() {
     return m_climbMotor.getPosition().getValueAsDouble();
+  }
+  public double getClimbError() {
+    return m_climbMotor.getClosedLoopError().getValueAsDouble();
+  }
+  public void setClimbPosition (double newPosition) {
+    m_climbMotor.setPosition(newPosition);
   }
   
 
