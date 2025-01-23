@@ -23,40 +23,20 @@ public class CoralSubsystem extends SubsystemBase {
   /** Creates a new CoralSubsystem. */
   SparkMax coralIntakeMotor;
   SparkMax coralPivotMotor;
-<<<<<<< Updated upstream
   AbsoluteEncoder coralPivotEncoder;
   RelativeEncoder coralIntakeEncoder;
   CoralStates m_coralState;
   double coralSetpoint;
-=======
-
-  AbsoluteEncoder coralPivotEncoder;
-  RelativeEncoder coralIntakeEncoder;
-
-  CoralStates m_coralState;
-  double coralSetpoint;
-
->>>>>>> Stashed changes
   PIDController m_coralPidController;
   
   
   public CoralSubsystem() {
     coralIntakeMotor = new SparkMax(0, MotorType.kBrushless); // TO DO - put actual device motor IDs
     coralPivotMotor = new SparkMax(0, MotorType.kBrushless);
-<<<<<<< Updated upstream
     coralIntakeEncoder = coralIntakeMotor.getEncoder();
     coralPivotEncoder = coralPivotMotor.getAbsoluteEncoder();
     m_coralState = CoralStates.kRest;
     coralSetpoint = m_coralState.getCoralSetpoint();
-=======
-
-    coralIntakeEncoder = coralIntakeMotor.getEncoder();
-    coralPivotEncoder = coralPivotMotor.getAbsoluteEncoder();
-
-    m_coralState = CoralStates.kRest;
-    coralSetpoint = m_coralState.getCoralSetpoint();
-
->>>>>>> Stashed changes
     m_coralPidController = new PIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
 
     configureMotors();
@@ -74,15 +54,9 @@ public class CoralSubsystem extends SubsystemBase {
     return coralPivotEncoder.getPosition();
   }
 
-<<<<<<< Updated upstream
   public double getCoralIntakeEncoder(){
     return coralIntakeEncoder.getPosition();
   }
-=======
-  //public double getCoralIntakeEncoder(){
-  //  return coralIntakeEncoder.getPosition();
-  //}
->>>>>>> Stashed changes
 
   public void setCoralState(CoralStates tempState){
     m_coralState = tempState;
@@ -102,14 +76,8 @@ public class CoralSubsystem extends SubsystemBase {
 
   private void configureMotors(){
     SparkMaxConfig config = new SparkMaxConfig();
-<<<<<<< Updated upstream
     config.smartCurrentLimit(0);//TO DO find values for limit and rate
     config.closedLoopRampRate(0);
-=======
-    // config.smartCurrentLimit(0);//TO DO find values for limit and rate
-    // config.closedLoopRampRate(0);
-    conig.smartCurrentLimit(0).closedLoopRampRate(0);
->>>>>>> Stashed changes
 
     coralIntakeMotor.configure(config, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
     coralPivotMotor.configure(config, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
