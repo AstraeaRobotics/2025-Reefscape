@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
@@ -21,54 +22,76 @@ public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
 
   private final SparkMax m_pivot;
-  private final SparkMax m_intake;
+  private final SparkMax m_intakeL;
+  private final SparkMax m_intakeR;
 
   private final AbsoluteEncoder m_encoder;
 
   private final PIDController m_pid;
+  private final SimpleMotorFeedforward m_intakeFeedForward;
   private AlgaeStates currState;
   private double desiredSetpoint;
 
   public AlgaeIntake() {
     m_pivot = new SparkMax(AlgaeConstants.kPivotPort, MotorType.kBrushless);
-    configMotor(m_pivot);
-    m_intake = new SparkMax(AlgaeConstants.kIntakePort, MotorType.kBrushless);
-    configMotor(m_intake);
+    m_intakeL = new SparkMax(AlgaeConstants.kIntakePortL, MotorType.kBrushless);
+    m_intakeR = new SparkMax(AlgaeConstants.kIntakePortR, MotorType.kBrushless);
 
     m_pid = new PIDController(AlgaeConstants.kP, 0, 0);
     m_encoder = m_pivot.getAbsoluteEncoder();
 
+    configMotors();
+
     currState = AlgaeStates.kIn;
     desiredSetpoint = currState.getPivotPos();
+
+    m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV);
   }
 
-  private void configMotor(SparkMax motor){
+  private void configMotors(){
     /*
      * This SparkMaxConfig is intended to be temporary, it would be better for a 
      * config object to be created in the constants class and imported into this class
      */
 
-    SparkMaxConfig config = new SparkMaxConfig();
-    //DUMMY VALUES
-    config.smartCurrentLimit(10);
-    config.closedLoopRampRate(10);
+    SparkMaxConfig configPivot = new SparkMaxConfig();
     
-    motor.configure(config, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+    configPivot.smartCurrentLimit(10);
+    configPivot.closedLoopRampRate(10);
+
+    m_pivot.configure(configPivot, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+
+    SparkMaxConfig configIntakeL = new SparkMaxConfig();
+
+    configIntakeL.smartCurrentLimit(10);
+    configIntakeL.closedLoopRampRate(10);
+
+    m_intakeL.configure(configIntakeL, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+
+    SparkMaxConfig configIntakeR = new SparkMaxConfig();
+
+    configIntakeR.smartCurrentLimit(10);
+    configIntakeR.closedLoopRampRate(10);
+    configIntakeR.inverted(true);
+
+    m_intakeL.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
   }
 
   public void setPivot(double speed){m_pivot.set(speed);}
-  public void setIntake(double speed){m_intake.set(speed);}
   public double getPivotEncoder(){return m_encoder.getPosition();}
+  public double getPID(){ return m_pid.calculate(getPivotEncoder(), desiredSetpoint);}
 
   public void setState(AlgaeStates newState){
     currState = newState;
     desiredSetpoint = currState.getPivotPos();
   }
 
-  public double getPID(){
-    m_pid.setSetpoint(desiredSetpoint);
-    return m_pid.calculate(getPivotEncoder());
+  public void setIntake(double speed){
+    m_intakeR.setVoltage(m_intakeFeedForward.calculate(speed));
+    m_intakeL.set(m_intakeFeedForward.calculate(speed));
   }
+
+  
 
   @Override
   public void periodic() {

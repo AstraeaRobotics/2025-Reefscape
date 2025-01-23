@@ -20,11 +20,12 @@ public final class Constants {
 
   public static class AlgaeConstants {
     public static final int kPivotPort = 0;
-    public static final int kIntakePort = 1;
-
     public static final double kP = 0.001;
-
-    //public static final SparkMaxConfig config = new SparkMaxConfig(); TO DO: GET THIS TO WORK
+    
+    public static final int kIntakePortL = 1;
+    public static final int kIntakePortR = 3;
+    public static final double intakeKS = 0;
+    public static final double intakeKV = 0;
     
     public enum AlgaeStates{
       kOut(2),
