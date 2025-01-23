@@ -21,6 +21,15 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
+    //feed forward constants 
+    public static final double coralIntakekS = 0.0;//TO DO - find feed forward values
+    public static final double coralIntakekV = 0.0;
+    public static final double coralIntakekA = 0.0;
+
+    public static final double coralPivotkS = 0.0;
+    public static final double coralPivotkV = 0.0;
+    public static final double coralPivotkA = 0.0;
+
     public enum CoralStates{
       kRest(0),
       kL1(0),  //TO DO - find encoder values
