@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +30,7 @@ public class AlgaeIntake extends SubsystemBase {
 
   private final PIDController m_pid;
   private final SimpleMotorFeedforward m_intakeFeedForward;
+  private final SimpleMotorFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
   private double desiredSetpoint;
 
@@ -46,6 +48,7 @@ public class AlgaeIntake extends SubsystemBase {
     desiredSetpoint = currState.getPivotPos();
 
     m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV);
+    m_pivotFeedforward = new SimpleMotorFeedforward(AlgaeConstants.pivotKS, AlgaeConstants.pivotKV);
   }
 
   private void configMotors(){
@@ -77,7 +80,6 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeL.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
   }
 
-  public void setPivot(double speed){m_pivot.set(speed);}
   public double getPivotEncoder(){return m_encoder.getPosition();}
   public double getPID(){ return m_pid.calculate(getPivotEncoder(), desiredSetpoint);}
 
@@ -88,7 +90,11 @@ public class AlgaeIntake extends SubsystemBase {
 
   public void setIntake(double speed){
     m_intakeR.setVoltage(m_intakeFeedForward.calculate(speed));
-    m_intakeL.set(m_intakeFeedForward.calculate(speed));
+    m_intakeL.setVoltage(m_intakeFeedForward.calculate(speed));
+  }
+
+  public void setPivot(double speed){
+    m_pivot.setVoltage(m_pivotFeedforward.calculate(speed));
   }
 
   
