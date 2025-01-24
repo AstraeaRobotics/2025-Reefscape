@@ -5,12 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class elevatorSpeed extends Command {
   /** Creates a new elevatorSpeed. */
-  private final double m_elevatorSpeed;
-  private final ElevatorSubsystem m_motors;
+  double m_elevatorSpeed;
+  ElevatorSubsystem m_motors;
 
   public elevatorSpeed(double speed, ElevatorSubsystem motors) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,23 +26,23 @@ public class elevatorSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    motors.setSpeed(speed);
+    m_motors.setSpeed(m_elevatorSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    motors.setSpeed(0);
+    m_motors.setSpeed(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
     double position = m_motors.getEncoder();
-    if(m_elevatorSpeed<0 && m_motors.getLimitSwitch()){
+    if(m_elevatorSpeed < 0 && m_motors.getLimitSwitch()) {
       return true;
-    } else if ( m_elevatorSpeed >=0 && position >0){
+    } 
+    else if (m_elevatorSpeed >= 0 && position > 0) {
       return true;
     }
     else {
