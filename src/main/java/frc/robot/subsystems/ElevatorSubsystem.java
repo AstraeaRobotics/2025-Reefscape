@@ -33,6 +33,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   ElevatorStates m_state;
   PIDController m_ElevatorPidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
+  ElevatorFeedforward feedforward = new ElevatorFeedforward(kS, kG, kV, kA);
 
   public ElevatorSubsystem(SparkMax motor1, SparkMax motor2) {
     m_rightMotor = motor1;
@@ -67,7 +68,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public double getEncoder(){
     return m_Encoder.getPosition();
  }
- 
+ public void ElevatorFeedforward(double Velocity, double acceleration) {
+  setSpeed(feedforward.calculate(Velocity,acceleration));
+}
  public boolean getLimitSwitch() {
   return m_limitSwitchMIN.get();
  }
