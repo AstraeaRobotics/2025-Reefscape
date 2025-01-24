@@ -4,12 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.swerve.ResetGyro;
+import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,10 +23,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
+  private final PS4Controller m_driverController = new PS4Controller(0);
+  private final JoystickButton kCross = new JoystickButton(m_driverController, PS4Controller.Button.kCross.value);
+  private final JoystickButton kCircle = new JoystickButton(m_driverController, PS4Controller.Button.kCircle.value);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+      m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, m_driverController::getLeftX, m_driverController::getLeftY, m_driverController::getRightX));
     configureBindings();
   }
 
@@ -37,7 +47,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
+    kCross.onTrue(new ResetGyro(m_SwerveSubsystem));
+    kCircle.onTrue(new PathPlannerAuto("test auto"));
   }
 
   /**

@@ -48,10 +48,10 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro = new AHRS();
 
     swerveModules = new SwerveModule[4];
-    swerveModules[0] = new SwerveModule(2, 1, 270, "front left");
+    swerveModules[0] = new SwerveModule(2, 1, 180, "front left");
     swerveModules[1] = new SwerveModule(4, 3, 0, "front right");
     swerveModules[2] = new SwerveModule(6, 5, 180, "back left");
-    swerveModules[3] = new SwerveModule(8, 7, 90, "back right");
+    swerveModules[3] = new SwerveModule(8, 7, 180, "back right");
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
@@ -68,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
       this::resetRobotPose, 
       this::getRobotRelativeSpeeds, 
       (speeds, feedforwards) -> drive(speeds), 
-      new PPHolonomicDriveController(new PIDConstants(0.0001, 0, 0), new PIDConstants(.05, 0, 0)), 
+      new PPHolonomicDriveController(new PIDConstants(2.0, 0, 0), new PIDConstants(2.0, 0, 0)), 
       config,
       () -> {
       var alliance = DriverStation.getAlliance();
