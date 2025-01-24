@@ -5,7 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-package frc.robot.subsystems;
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
@@ -19,26 +20,48 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
-  private final SparkMax m_rightMotor;
-  private final SparkMax m_leftMotor;
-  private final RelativeEncoder m_Encoder;
+  SparkMax m_rightMotor;
+  SparkMax m_leftMotor;
+
+  RelativeEncoder m_Encoder;
   DigitalInput m_limitSwitchMIN;
   double m_desiredSetPoint;
+
   ElevatorStates m_state;
-  PIDController pid = new PIDController(0.1, 0.3, 0.1);
+  PIDController m_ElevatorPidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
+
   public ElevatorSubsystem(SparkMax motor1, SparkMax motor2) {
     m_rightMotor = motor1;
     m_leftMotor = motor2;
-    m_Encoder = sparkMaxOne.getEncoder();
+    m_Encoder = m_rightMotor.getEncoder();
     m_desiredSetPoint = 0;
     m_state = ElevatorStates.kGround;
   }
   public void setSpeed(double speed){
     m_rightMotor.set(speed);
     m_leftMotor.set(-speed);
+  }
+
+  public void configureMotors() {
+    SparkMaxConfig configElevatorL = new SparkMaxConfig();
+    SparkMaxConfig configElevatorR = new SparkMaxConfig();
+
+    configElevatorL.smartCurrentLimit(0); //arbitary #
+    configElevatorL.closedLoopRampRate(0); //arbitary #
+    configElevatorL.inverted(true);
+
+    m_leftMotor.configure(configElevatorR, null, null);
+    m_rightMotor.configure(configElevatorR, null, null);
+
+    configElevatorR.smartCurrentLimit(0);
+    configElevatorR.closedLoopRampRate(0);
+
+
+
   }
 
   public double getEncoder(){
@@ -54,9 +77,17 @@ public class ElevatorSubsystem extends SubsystemBase {
   m_desiredSetPoint = m_state.getElevatorSetPoint();
  }
 
+ public double getMotorPID() {
+  return m_ElevatorPidController.calculate(getEncoder());
+ }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    setSpeed(pid.calculate(getEncoder(), m_desiredSetPoint));
+    setSpeed(m_ElevatorPidController.calculate(getEncoder(), m_desiredSetPoint));
+    SmartDashboard.putNumber("Elevator Encoder", m_Encoder.getPosition());
+    SmartDashboard.putNumber("Elevator Speed", m_Encoder.getVelocity());
+    SmartDashboard.putNumber("PID Output", getMotorPID());
+
   }
 }

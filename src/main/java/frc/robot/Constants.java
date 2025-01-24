@@ -18,16 +18,24 @@ public final class Constants {
   }
   public static class ElevatorConstants{
     //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
+    public static final double kEncoderConversionFactor = 2*Math.PI;
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    
     public enum ElevatorStates{
       kGround(0),
       kHalf(50),
       kFull(100);
+      
 
       
       private double elevatorSetPoint;
       private ElevatorStates(double elevatorSetPoint){
       this.elevatorSetPoint = elevatorSetPoint;
       }
+      
+    
 
 
       public double getElevatorSetPoint(){
@@ -36,5 +44,7 @@ public final class Constants {
 
 
     }
+
+  
   }
 }
