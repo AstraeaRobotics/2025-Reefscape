@@ -16,4 +16,25 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class ElevatorConstants{
+    //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
+    public enum ElevatorStates{
+      kGround(0),
+      kHalf(50),
+      kFull(100);
+
+      
+      private double elevatorSetPoint;
+      private ElevatorStates(double elevatorSetPoint){
+      this.elevatorSetPoint = elevatorSetPoint;
+      }
+
+
+      public double getElevatorSetPoint(){
+        return elevatorSetPoint;
+      }
+
+
+    }
+  }
 }
