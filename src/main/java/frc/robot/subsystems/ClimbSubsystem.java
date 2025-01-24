@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -27,13 +29,14 @@ public class ClimbSubsystem extends SubsystemBase {
   Slot0Configs m_climbConfigs;
   double desiredPosition;
   PositionVoltage m_climbPosition;
+  VelocityVoltage m_climbVelocity;
 
   public ClimbSubsystem() {
     m_climbMotor = new TalonFX(0);
     m_climbConfigs = new Slot0Configs();
     //configureMotors();
     m_climbPosition = new PositionVoltage(0).withSlot(0);
-
+    m_climbVelocity = new VelocityVoltage(0).withSlot(0);
     desiredPosition = 0;
 
   }
@@ -45,7 +48,7 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbConfigs.kD = 0.0;
 
   }
-  public void spinClimbMotor(double position) {
+  public void spinClimbMotorPosition(double position) {
     m_climbMotor.setControl(m_climbPosition.withPosition(position));
   }
   public double getClimbPosition() {
@@ -54,14 +57,18 @@ public class ClimbSubsystem extends SubsystemBase {
   public double getClimbError() {
     return m_climbMotor.getClosedLoopError().getValueAsDouble();
   }
-  public void setClimbPosition (double newPosition) {
-    m_climbMotor.setPosition(newPosition);
+  public void spinClimbMotorVelocity(double velocity) {
+    m_climbMotor.setControl(m_climbVelocity.withVelocity(velocity));
   }
-  
+  public double getClimbVelocity() {
+    return m_climbMotor.getVelocity().getValueAsDouble();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    SmartDashboard.putNumber("Climb Position", getClimbPosition());
+    SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
   }
 }
+

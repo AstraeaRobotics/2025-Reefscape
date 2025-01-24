@@ -7,9 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SpinClimbManual;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -20,15 +24,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static final PS4Controller driverController = new PS4Controller(0);
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  public static final JoystickButton kCircle = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
+  public static final JoystickButton kTriangle = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
+
+  public static final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+
     configureBindings();
   }
 
@@ -49,6 +61,11 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    
+    kCircle.whileTrue(new SpinClimbManual(m_climbSubsystem, .01));
+    kTriangle.whileTrue(new SpinClimbManual(m_climbSubsystem, -.01));
+
+
   }
 
   /**
