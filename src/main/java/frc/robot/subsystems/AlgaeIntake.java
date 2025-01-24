@@ -77,7 +77,7 @@ public class AlgaeIntake extends SubsystemBase {
     configIntakeR.closedLoopRampRate(10);
     configIntakeR.inverted(true);
 
-    m_intakeL.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+    m_intakeR.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
   }
 
   public double getPivotEncoder(){return m_encoder.getPosition();}
