@@ -82,6 +82,8 @@ public class AlgaeIntake extends SubsystemBase {
 
   public double getPivotEncoder(){return m_encoder.getPosition();}
   public double getPID(){ return m_pid.calculate(getPivotEncoder(), desiredSetpoint);}
+  public void setIntakeManual(double speed){m_intakeR.set(speed); m_intakeL.set(speed);}
+  public void setPivotManual(double speed){m_pivot.set(speed);}
 
   public void setState(AlgaeStates newState){
     currState = newState;
