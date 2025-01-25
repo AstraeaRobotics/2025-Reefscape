@@ -6,158 +6,131 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkBase.PersistMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon; //Talon imports, automatically has PID control
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.controls.CoastOut;
-import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+
 
  
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   /** Creates a new ElevatorSubsystem. */
-  TalonFX m_rightMotor;
-  TalonFX m_leftMotor;
-
-  TalonFXConfiguration configs;
-
-  Slot0Configs rightMotorConfigs;
-  Slot1Configs leftMotorConfigs;
+  SparkMax m_rightMotor;
+  SparkMax m_leftMotor;
 
   // RelativeEncoder m_Encoder;
-  double m_desiredSetPoint;
-
+  
   ElevatorStates m_state;
+  double m_SetPoint;
+
+  AbsoluteEncoder elevatorEncoder;
+
   PIDController m_ElevatorPidController;
+
+  ElevatorFeedforward m_leftElevatorFeedforward;
+  ElevatorFeedforward m_righElevatorFeedforward;
   // ElevatorFeedforward feedforward;
 
-  VelocityVoltage m_leftVelocityVoltage;
-  VelocityVoltage m_rightVelocityVoltage;
-
-  NeutralOut m_brake;
-
   public ElevatorSubsystem() {
-    m_rightMotor = new TalonFX(0); // NEED PORT # Later
-    m_leftMotor = new TalonFX(0);
-    //m_Encoder = m_rightMotor.getEncoder();
+    m_rightMotor = new SparkMax(0, MotorType.kBrushless); // NEED PORT # Later
+    m_leftMotor = new SparkMax(0, MotorType.kBrushless);
+    elevatorEncoder = m_rightMotor.getAbsoluteEncoder();
 
     // m_desiredSetPoint = 0;
-    // m_state = ElevatorStates.kGround; // dont have or need states right now
+    m_state = ElevatorStates.kSource; // dont have or need states right now
+    m_SetPoint = m_state.getElevatorSetPoint();
 
-    //m_ElevatorPidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
-    // feedforward = new ElevatorFeedforward(kS, kG, kV, kA);
+    m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
 
-    rightMotorConfigs = new Slot0Configs();
-    leftMotorConfigs = new Slot1Configs();
-    configs = new TalonFXConfiguration();
-
-    m_brake = new NeutralOut();
-
-    m_rightVelocityVoltage = new VelocityVoltage(0).withSlot(0);
-    m_leftVelocityVoltage = new VelocityVoltage(0).withSlot(1);
-
+    m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kV, ElevatorConstants.kA);
 
     configureMotors();
 
   }
 
   public void configureMotors() {
-    rightMotorConfigs.kP = 0; //Need these values
-    rightMotorConfigs.kI = 0;
-    rightMotorConfigs.kD = 0;
-    rightMotorConfigs.kS = 0;
-    rightMotorConfigs.kG = 0;
-    rightMotorConfigs.kA = 0;
-    rightMotorConfigs.kV = 0;
+    SparkMaxConfig leftConfig = new SparkMaxConfig();
+    SparkMaxConfig rightConfig = new SparkMaxConfig();
 
-    leftMotorConfigs.kP = 0;
-    leftMotorConfigs.kI = 0;
-    leftMotorConfigs.kD = 0;
-    leftMotorConfigs.kS = 0;
-    leftMotorConfigs.kG = 0;
-    leftMotorConfigs.kA = 0;
-    leftMotorConfigs.kV = 0;
+    leftConfig.smartCurrentLimit(0).closedLoopRampRate(0);
+    rightConfig.smartCurrentLimit(0).closedLoopRampRate(0);
 
-    m_leftMotor.setNeutralMode(NeutralModeValue.Coast);
-    m_rightMotor.setNeutralMode(NeutralModeValue.Coast);
-
-    m_leftMotor.getConfigurator().apply(leftMotorConfigs);
-    m_rightMotor.getConfigurator().apply(rightMotorConfigs);
-
+    m_leftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_rightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public void setState(ElevatorStates tempState){
+  public void setElevatorState(ElevatorStates tempState){
     m_state = tempState;
-    m_desiredSetPoint = m_state.getElevatorSetPoint();
+    m_SetPoint = m_state.getElevatorSetPoint();
+  }
+
+  public ElevatorStates getElevatorState() {
+    return m_state;
   }
 
   public void setMotorSpeed(double speed){ // need to test which motor needs the negative
-    // m_rightMotor.set(speed);
-    // m_leftMotor.set(-speed);
-    m_rightMotor.setControl(m_rightVelocityVoltage.withVelocity(speed));
-    m_leftMotor.setControl(m_leftVelocityVoltage.withVelocity(speed));
+    m_rightMotor.set(speed);
+    m_leftMotor.set(-speed);
   }
 
   public void stopMotor() {
-    m_rightMotor.setControl(m_brake);
-    m_leftMotor.setControl(m_brake);
+    m_rightMotor.set(0);
+    m_leftMotor.set(0);
   }
 
-  public void setMotorCoast() {
-    m_rightMotor.setNeutralMode(NeutralModeValue.Coast);
-    m_leftMotor.setNeutralMode(NeutralModeValue.Coast);
+  public void setLeftMotorFeedForward(double speed) {
+    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(speed));
   }
 
-  public double getMotorPostion() {
-    return m_rightMotor.getPosition().getValueAsDouble();
+  public void setRightMotorFeedForward(double speed) {
+    m_rightMotor.setVoltage(m_righElevatorFeedforward.calculate(speed));
+  }
+
+  public void setElevatorVoltage(double voltage) {
+    m_rightMotor.setVoltage(voltage);
+    m_leftMotor.setVoltage(voltage);
+  }
+
+  public double getElevatorEncoder() {
+    return elevatorEncoder.getPosition();
+  }
+
+  public double getElevatorPID() {
+    return m_ElevatorPidController.calculate(getElevatorEncoder(), m_SetPoint);
+  }
+ 
+  public void setElevatorPID(){
+    m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
   }
 
   public double getMotorVelocity() {
-    return m_rightMotor.getVelocity().getValueAsDouble();
+    return elevatorEncoder.getVelocity();
   }
-
-  // public double getEncoder() {
-  //   return m_Encoder.getPosition();
-  // }
   
-  // public void ElevatorFeedforward(double Velocity, double acceleration) {
-  //   setSpeed(feedforward.calculate(Velocity,acceleration));
-  // }
-  
-
-  public double getMotorP() {
-    return rightMotorConfigs.kP;
-  }
-
-  public double getMotorI() {
-    return rightMotorConfigs.kI;
-  }
-
-  public double getMotorD() {
-    return rightMotorConfigs.kD;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     //setSpeed(m_ElevatorPidController.calculate(getEncoder(), m_desiredSetPoint));
-    SmartDashboard.putNumber("Elevator Encoder Position", getMotorPostion());
+    SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
     SmartDashboard.putNumber("Elevator Speed", getMotorVelocity());
-    SmartDashboard.putNumber("Elevator TalonMotor kP", getMotorP());
-    SmartDashboard.putNumber("Elevator TalonMotor kI", getMotorI());
-    SmartDashboard.putNumber("Elevator TalonMotor kD", getMotorD());
+    SmartDashboard.putNumber("Elevator PID", getElevatorPID());
+    
   }
 }

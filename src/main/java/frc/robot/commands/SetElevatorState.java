@@ -26,6 +26,6 @@ public class SetElevatorState extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevatorSubsystem.setState(state);
+    elevatorSubsystem.setElevatorState(state);
   }
 }

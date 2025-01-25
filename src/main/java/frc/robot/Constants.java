@@ -19,13 +19,13 @@ public final class Constants {
   public static class ElevatorConstants{
     //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
     public static final double kEncoderConversionFactor = 2*Math.PI;
-    // public static final double kP = 0;
-    // public static final double kI = 0;
-    // public static final double kD = 0;
-    // public static final double kS = 0;
-    // public static final double kG = 0;
-    // public static final double kV = 0;
-    // public static final double kA = 0;
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kS = 0;
+    public static final double kG = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kSource(0), // needed to test for these values
