@@ -18,5 +18,21 @@ public class Constants {
         public static final int kRainbowValue = 150;
         public static final int kRainbowIncrement = 150;
         public static final int kMaxHue = 180;
+        public enum LEDStates {
+          kOff,
+          kGlowRed,
+          kGlowYellow,
+          kGlowPurple,
+          kRainbow,
+          kintaking,
+          kPlacing,
+          kTrailYellow,
+          kTrailPurple,
+          kFlashYellow,
+          kFlashPurple,
+          kFlashGreen,
+          kBigInterval,
+        }
   }
+
 }

@@ -36,26 +36,14 @@ public class LEDSubsystem extends SubsystemBase {
     led.start();
     ledSim = new AddressableLEDSim(led);
     Shuffleboard.getTab("DashBoard").addRaw("Addressable Led", this::getLedData).withWidget("Addressable LED");
-    setState(LEDStates.kTrailPurple);
+    setState(LedConstants.LEDStates.kTrailPurple);
+   
   }
-  public void setState(LEDStates state) {
+  public void setState(LedConstants.LEDStates state) {
+  
   }
-public enum LEDStates {
-  kOff,
-  kGlowRed,
-  kGlowYellow,
-  kGlowPurple,
-  kRainbow,
-  kintaking,
-  kPlacing,
-  kTrailYellow,
-  kTrailPurple,
-  kFlashYellow,
-  kFlashPurple,
-  kFlashGreen,
-  kBigInterval,
-}
-public void setOutPut(LEDStates state){
+
+public void setOutPut(LedConstants.LEDStates state){
   switch (state) {
     case kGlowRed:
     glow(Color.kRed);
@@ -176,7 +164,7 @@ public void bigTrail(Color color, double interval, int length) {
   @Override
   public void periodic() {
     if (DriverStation.isDisabled()){
-      setOutPut(LEDStates.kBigInterval);
+      setOutPut(LedConstants.LEDStates.kBigInterval);
     }
   }
 }
