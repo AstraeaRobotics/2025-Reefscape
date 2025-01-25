@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // m_desiredSetPoint = 0;
     // m_state = ElevatorStates.kGround; // dont have or need states right now
 
-    m_ElevatorPidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
+    //m_ElevatorPidController = new PIDController(Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD);
     // feedforward = new ElevatorFeedforward(kS, kG, kV, kA);
 
     rightMotorConfigs = new Slot0Configs();
