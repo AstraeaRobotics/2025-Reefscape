@@ -5,13 +5,13 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,7 +26,9 @@ public class AlgaeIntake extends SubsystemBase {
   private final SparkMax m_intakeL;
   private final SparkMax m_intakeR;
 
-  private final AbsoluteEncoder m_encoder;
+  private final AbsoluteEncoder m_pivotEncoder;
+  private final RelativeEncoder m_intakeEncoder;
+  
 
   private final PIDController m_pid;
   private final SimpleMotorFeedforward m_intakeFeedForward;
@@ -40,15 +42,17 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeR = new SparkMax(AlgaeConstants.kIntakePortR, MotorType.kBrushless);
 
     m_pid = new PIDController(AlgaeConstants.kP, 0, 0);
-    m_encoder = m_pivot.getAbsoluteEncoder();
+    m_pivotEncoder = m_pivot.getAbsoluteEncoder();
+    m_intakeEncoder = m_intakeL.getEncoder();
+    m_intakeEncoder.setPosition(0);
 
     configMotors();
 
     currState = AlgaeStates.kIn;
     desiredSetpoint = currState.getPivotPos();
 
-    m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV);
-    m_pivotFeedforward = new SimpleMotorFeedforward(AlgaeConstants.pivotKS, AlgaeConstants.pivotKV);
+    m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV, AlgaeConstants.intakeKA);
+    m_pivotFeedforward = new SimpleMotorFeedforward(AlgaeConstants.pivotKS, AlgaeConstants.pivotKV, AlgaeConstants.pivotKA);
   }
 
   private void configMotors(){
@@ -80,7 +84,9 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeR.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
   }
 
-  public double getPivotEncoder(){return m_encoder.getPosition();}
+  public double getPivotEncoder(){return m_pivotEncoder.getPosition();}
+  public double getIntakeVelocity(){return m_intakeEncoder.getVelocity();}
+  public double getPivotVelocity(){return m_pivotEncoder.getVelocity();}
   public double getPID(){ return m_pid.calculate(getPivotEncoder(), desiredSetpoint);}
   public void setIntakeManual(double speed){m_intakeR.set(speed); m_intakeL.set(speed);}
   public void setPivotManual(double speed){m_pivot.set(speed);}
@@ -104,6 +110,9 @@ public class AlgaeIntake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Algae Pivot Encoder Val", getPivotEncoder());
-    setPivot(getPID());
+    SmartDashboard.putNumber("Algae PID output", getPID());
+    SmartDashboard.putNumber("Algae Intake Velocity", getIntakeVelocity());
+    SmartDashboard.putNumber("Algae Pivot Velocity", getPivotEncoder());
+    //setPivot(getPID());
   }
 }

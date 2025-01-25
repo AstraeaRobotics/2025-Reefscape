@@ -46,6 +46,8 @@ public final class Constants {
     }
 
     public static double pivotKG;
+    public static double intakeKA;
+    public static double pivotKA;
   }
 
   }
