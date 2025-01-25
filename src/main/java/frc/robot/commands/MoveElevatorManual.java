@@ -7,18 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class MoveElevator extends Command {
-  /** Creates a new MoveToState. */
+public class MoveElevatorManual extends Command {
   ElevatorSubsystem m_ElevatorSubsystem;
   double speed;
-
-  public MoveElevator(ElevatorSubsystem sub, double speed) {
+  /** Creates a new MoveElevatorManual. */
+  public MoveElevatorManual(ElevatorSubsystem sub, double speed) {
     m_ElevatorSubsystem = sub;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-
-    addRequirements(m_ElevatorSubsystem);
+    addRequirements(sub);
   }
 
   // Called when the command is initially scheduled.

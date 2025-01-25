@@ -11,12 +11,14 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class elevatorSpeed extends Command {
   /** Creates a new elevatorSpeed. */
   double m_elevatorSpeed;
-  ElevatorSubsystem m_motors;
+  ElevatorSubsystem m_elevatorSubsystem;
 
-  public elevatorSpeed(double speed, ElevatorSubsystem motors) {
+  public elevatorSpeed(double speed, ElevatorSubsystem sub) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevatorSpeed = speed;
-    m_motors = motors;
+    m_elevatorSubsystem = sub;
+
+    addRequirements(m_elevatorSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -26,27 +28,30 @@ public class elevatorSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_motors.setSpeed(m_elevatorSpeed);
+    m_elevatorSubsystem.setMotorSpeed(m_elevatorSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_motors.setSpeed(0);
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double position = m_motors.getEncoder();
-    if(m_elevatorSpeed < 0 && m_motors.getLimitSwitch()) {
-      return true;
-    } 
-    else if (m_elevatorSpeed >= 0 && position > 0) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  //   double position = m_elevatorSubsystem.getMotorPostion();
+  //   if(m_elevatorSpeed < 0 && m_motors.getLimitSwitch()) {
+  //     return true;
+  //   } 
+  //   else if (m_elevatorSpeed >= 0 && position > 0) {
+  //     return true;
+  //   }
+  //   else {
+  //     return false;
+  //   }
+  // }
+    return false;
   }
+
 }

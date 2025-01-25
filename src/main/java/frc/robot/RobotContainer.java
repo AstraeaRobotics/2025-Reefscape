@@ -5,12 +5,18 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveElevatorManual;
+import frc.robot.commands.SetElevatorState;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,14 +27,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final elevatorSubsystem m_elevatorSubsystem = new elevatorSubsystem(1,2);
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final JoystickButton kCircle = new JoystickButton(controller,PS4Controller.Button.kCircle.value);
-  private final JoystickButton kSquare = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-  private final JoystickButton kr1 = new JoystickButton(m_Controller,PS4Controller.Button.kR1.value);
-  private final JoystickButton kr2 = new JoystickButton(m_Controller,PS4Controller.Button.kR2.value);
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final PS4Controller m_Controller = new PS4Controller(0);
+
+  private final JoystickButton kCircle = new JoystickButton(m_Controller,PS4Controller.Button.kCircle.value);
+  private final JoystickButton kSquare = new JoystickButton(m_Controller, PS4Controller.Button.kSquare.value);
+  private final JoystickButton kCross = new JoystickButton(m_Controller, PS4Controller.Button.kCross.value);
+  private final JoystickButton kTriangle = new JoystickButton(m_Controller, PS4Controller.Button.kTriangle.value);
+  private final JoystickButton kR1 = new JoystickButton(m_Controller,PS4Controller.Button.kR1.value);
+  private final JoystickButton kR2 = new JoystickButton(m_Controller,PS4Controller.Button.kR2.value);
+  private final JoystickButton kL1 = new JoystickButton(m_Controller,PS4Controller.Button.kL1.value);
+  private final JoystickButton kL2 = new JoystickButton(m_Controller,PS4Controller.Button.kL2.value);
+  
+
+  // private final CommandXboxController m_driverController =
+  //     new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,17 +61,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    kCircle.whileTrue(new motorSpeed(1, 0.1));
-    kSquare.whileTrue(new motorSpeed(2, -0.1));
-    kTriangle.onTrue(new SetWinchState(elevatorSub, ElevatorStates.kGround));
-    k1.onTrue(new SetWinchState(elevatorSub, ElevatorStates.kHalf));
-    k2.onTrue(new SetWinchState(elevatorSub, ElevatorStates.kTop));
+    // kTriangle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kSource));   // don't need states right now, just manual to test 
+    // kCross.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kProccessor));
+    // kCircle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_1));
+    // kSquare.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_2));
+
+    kR1.whileTrue(new MoveElevatorManual(m_elevatorSubsystem, 0.1));
+    kR2.whileTrue(new MoveElevatorManual(m_elevatorSubsystem, -0.1));
   }
 
   /**

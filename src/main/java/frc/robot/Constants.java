@@ -19,29 +19,31 @@ public final class Constants {
   public static class ElevatorConstants{
     //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
     public static final double kEncoderConversionFactor = 2*Math.PI;
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kS = 0;
-    public static final double kG = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
+    // public static final double kP = 0;
+    // public static final double kI = 0;
+    // public static final double kD = 0;
+    // public static final double kS = 0;
+    // public static final double kG = 0;
+    // public static final double kV = 0;
+    // public static final double kA = 0;
     
-    public enum ElevatorStates{
-      kGround(0),
-      kHalf(50),
-      kFull(100);
-      
+    public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
+      kSource(0), // needed to test for these values
+      kProccessor(0),
+      kCoral_1(0),
+      kCoral_2(0),
+      kCoral_3(0),
+      kCoral_4(0),
+      kAlgae_2(0),
+      kAlgae_3(0);
 
       
       private double elevatorSetPoint;
-      private ElevatorStates(double elevatorSetPoint){
-      this.elevatorSetPoint = elevatorSetPoint;
+
+      private ElevatorStates(double elevatorSetPoint) {
+        this.elevatorSetPoint = elevatorSetPoint;
       }
       
-    
-
-
       public double getElevatorSetPoint(){
         return elevatorSetPoint;
       }
