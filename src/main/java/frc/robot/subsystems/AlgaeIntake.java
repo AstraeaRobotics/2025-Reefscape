@@ -66,14 +66,14 @@ public class AlgaeIntake extends SubsystemBase {
     configPivot.smartCurrentLimit(10);
     configPivot.closedLoopRampRate(10);
 
-    m_pivot.configure(configPivot, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+    m_pivot.configure(configPivot, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig configIntakeL = new SparkMaxConfig();
 
     configIntakeL.smartCurrentLimit(10);
     configIntakeL.closedLoopRampRate(10);
 
-    m_intakeL.configure(configIntakeL, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+    m_intakeL.configure(configIntakeL, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig configIntakeR = new SparkMaxConfig();
 
@@ -81,14 +81,19 @@ public class AlgaeIntake extends SubsystemBase {
     configIntakeR.closedLoopRampRate(10);
     configIntakeR.inverted(true);
 
-    m_intakeR.configure(configIntakeR, ResetMode.kResetSafeParameters.kResetSafeParameters, PersistMode.kPersistParameters.kPersistParameters);
+    m_intakeR.configure(configIntakeR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public double getPivotEncoder(){return m_pivotEncoder.getPosition();}
+
   public double getIntakeVelocity(){return m_intakeEncoder.getVelocity();}
+
   public double getPivotVelocity(){return m_pivotEncoder.getVelocity();}
+
   public double getPID(){ return m_pid.calculate(getPivotEncoder(), desiredSetpoint);}
+
   public void setIntakeManual(double speed){m_intakeR.set(speed); m_intakeL.set(speed);}
+
   public void setPivotManual(double speed){m_pivot.set(speed);}
 
   public void setState(AlgaeStates newState){
