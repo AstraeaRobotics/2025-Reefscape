@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -31,6 +32,7 @@ public class SwerveModule extends SubsystemBase {
   private SparkMaxConfig driveMotorConfig;
 
   private PIDController turnPIDController;
+  private SimpleMotorFeedforward driveFF;
 
   private AbsoluteEncoder turnEncoder;
   private RelativeEncoder driveEncoder;
@@ -59,11 +61,12 @@ public class SwerveModule extends SubsystemBase {
 
     this.moduleState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
+    driveFF = new SimpleMotorFeedforward(0.11, 0.45);
+
     configureMotors();
   }
 
   private void configureMotors() {
-    // Turn motor configuration
     turnPIDController.enableContinuousInput(0, 360);
 
     turnMotorConfig
@@ -75,7 +78,6 @@ public class SwerveModule extends SubsystemBase {
     .velocityConversionFactor(DrivebaseModuleConstants.kTurnEncoderVelocityFactor);
 
     turnMotor.configure(turnMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // Drive motor configuration
 
     driveMotorConfig
     .closedLoopRampRate(8)
@@ -119,7 +121,8 @@ public class SwerveModule extends SubsystemBase {
     double[] optimizedModule = SwerveUtil.optimizeModule(getAngle(), moduleState.angle.getDegrees() + 180, moduleState.speedMetersPerSecond);
 
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
-    driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1]));
+    // driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1]));
+    driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
   }
 
   @Override
