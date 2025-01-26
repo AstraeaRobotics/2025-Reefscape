@@ -45,4 +45,34 @@ public class Constants {
     public static final double kWheelBase = Units.inchesToMeters(20);/* the distance between the front and rear wheels */
     public static final double kTrackWidth = Units.inchesToMeters(22); /* the distance between left and right wheels */
   }
+
+  public static class ElevatorConstants {
+    public static final double kGroundSetpoint = 0;
+    public static final double KL1Setpoint = 0;
+    public static final double kL2Setpoint = 0;
+    public static final double kL3Setpoint = 0;
+    public static final double KL4Setpoint = 0;
+    public static final double kSourceSetpoint = 0;
+    public static final double kProcessorSetpoint = 0;
+
+    public enum ElevatorStates {
+        kGround(kGroundSetpoint),
+        KL1(KL1Setpoint),
+        KL2(kL2Setpoint),
+        KL3(kL3Setpoint),
+        KL4(KL4Setpoint),
+        kSource(kSourceSetpoint),
+        kProcessor(kProcessorSetpoint);
+
+        private double elevatorSetpoint;
+
+        private ElevatorStates(double elevatorSetpoint) {
+            this.elevatorSetpoint = elevatorSetpoint;
+        }
+        
+        public double getElevatorSetpoint() {
+            return elevatorSetpoint;
+        }
+    }
+  }
 }

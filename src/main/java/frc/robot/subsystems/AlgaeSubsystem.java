@@ -13,7 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorPortIDConstants;
-import frc.robot.Constants.AlgaeConstants.AlgaeStates;;
+import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 
 public class AlgaeSubsystem extends SubsystemBase {
   /** Creates a new AlgaeSubsystem. */

@@ -9,6 +9,25 @@
           "data": {
             "pathName": "test path"
           }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL4"
+                }
+              }
+            ]
+          }
         }
       ]
     }
