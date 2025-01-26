@@ -118,6 +118,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
  
   public void setElevatorPID(){
     m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
+    m_leftMotor.set(-MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
   }
 
   public double getMotorVelocity() {
