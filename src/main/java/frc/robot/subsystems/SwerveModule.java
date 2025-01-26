@@ -102,7 +102,7 @@ public class SwerveModule extends SubsystemBase {
 
   public SwerveModulePosition getModulePosition() {
     double distance = getDistance();
-    Rotation2d angle = Rotation2d.fromDegrees(-getAngle());
+    Rotation2d angle = Rotation2d.fromDegrees(getAngle());
     return new SwerveModulePosition(distance, angle);
   }
 
@@ -126,5 +126,6 @@ public class SwerveModule extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("drivebase position", getDistance());
+    SmartDashboard.putNumber("Module velocity", driveEncoder.getVelocity());
   }
 }
