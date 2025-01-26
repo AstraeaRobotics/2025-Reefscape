@@ -16,4 +16,20 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static final class ClimbConstants { 
+
+  public enum ClimbStates {
+    kTop(0), //Placeholders, have to test for values
+    kGround(0);
+
+    private double climbSetpoint;
+    private ClimbStates(double climbSetpoint){
+      this.climbSetpoint = climbSetpoint;
+    }
+    public double getClimbSetpoint(){
+      return climbSetpoint;
+    }
+  }
+}
+
 }

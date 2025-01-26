@@ -21,15 +21,17 @@ import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import frc.robot.Constants.ClimbConstants.ClimbStates;
 
 public class ClimbSubsystem extends SubsystemBase {
   /** Creates a new ClimbSubsystem. */
   private TalonFX m_climbMotor;
   
   Slot0Configs m_climbConfigs;
-  double desiredPosition;
   PositionVoltage m_climbPosition;
   VelocityVoltage m_climbVelocity;
+  ClimbStates m_climbState;
+  double desiredSetpoint;
 
   public ClimbSubsystem() {
     m_climbMotor = new TalonFX(0);
@@ -37,8 +39,9 @@ public class ClimbSubsystem extends SubsystemBase {
     //configureMotors();
     m_climbPosition = new PositionVoltage(0).withSlot(0);
     m_climbVelocity = new VelocityVoltage(0).withSlot(0);
-    desiredPosition = 0;
-
+    
+    m_climbState = ClimbStates.kTop;
+    desiredSetpoint = m_climbState.getClimbSetpoint();
   }
   public void configureMotors() {
     m_climbConfigs.kS = 0.0;
@@ -63,6 +66,12 @@ public class ClimbSubsystem extends SubsystemBase {
   public double getClimbVelocity() {
     return m_climbMotor.getVelocity().getValueAsDouble();
   }
+
+  public void setClimbState (ClimbStates tempState) {
+    m_climbState = tempState;
+    desiredSetpoint = m_climbState.getClimbSetpoint();
+  }
+
 
   @Override
   public void periodic() {

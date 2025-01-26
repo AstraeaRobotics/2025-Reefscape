@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SetClimbState;
 import frc.robot.commands.SpinClimbManual;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ClimbConstants.ClimbStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,6 +31,8 @@ public class RobotContainer {
 
   public static final JoystickButton kCircle = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
   public static final JoystickButton kTriangle = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
+  public static final JoystickButton kSquare = new JoystickButton(driverController,PS4Controller.Button.kSquare.value);
+  public static final JoystickButton kCross = new JoystickButton(driverController,PS4Controller.Button.kCross.value);
 
   public static final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
 
@@ -64,6 +68,9 @@ public class RobotContainer {
     
     kCircle.whileTrue(new SpinClimbManual(m_climbSubsystem, .01));
     kTriangle.whileTrue(new SpinClimbManual(m_climbSubsystem, -.01));
+    kCross.onTrue(new SetClimbState(m_climbSubsystem, ClimbStates.kTop));
+    kSquare.onTrue(new SetClimbState(m_climbSubsystem, ClimbStates.kGround));
+
 
 
   }
