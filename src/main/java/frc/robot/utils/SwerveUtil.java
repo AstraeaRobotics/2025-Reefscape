@@ -29,6 +29,6 @@ public class SwerveUtil {
     }
 
     public static ChassisSpeeds driveInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(-driveY, driveX, rotation, Rotation2d.fromDegrees(heading));
+        return ChassisSpeeds.fromFieldRelativeSpeeds(-driveY, -driveX, rotation, Rotation2d.fromDegrees(heading));
     }
 }

@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseConstants;
 
@@ -48,10 +49,10 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro = new AHRS();
 
     swerveModules = new SwerveModule[4];
-    swerveModules[0] = new SwerveModule(2, 1, 270, "front left");
+    swerveModules[0] = new SwerveModule(2, 1, 180, "front left");
     swerveModules[1] = new SwerveModule(4, 3, 0, "front right");
     swerveModules[2] = new SwerveModule(6, 5, 180, "back left");
-    swerveModules[3] = new SwerveModule(8, 7, 90, "back right");
+    swerveModules[3] = new SwerveModule(8, 7, 180, "back right");
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
@@ -68,13 +69,13 @@ public class SwerveSubsystem extends SubsystemBase {
       this::resetRobotPose, 
       this::getRobotRelativeSpeeds, 
       (speeds, feedforwards) -> drive(speeds), 
-      new PPHolonomicDriveController(new PIDConstants(0.0001, 0, 0), new PIDConstants(.05, 0, 0)), 
+      new PPHolonomicDriveController(new PIDConstants(0.9, 0, 0), new PIDConstants(2.0, 0, 0)), 
       config,
       () -> {
-      var alliance = DriverStation.getAlliance();
-      if (alliance.isPresent()) {
-        return alliance.get() == DriverStation.Alliance.Red;
-      }
+      // var alliance = DriverStation.getAlliance();
+      // if (alliance.isPresent()) {
+      //   return alliance.get() == DriverStation.Alliance.Red;
+      // }
       return false;
     },
     this);
@@ -113,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    return gyro.getYaw();
+    return (gyro.getYaw() + 360) % 360;
   }
 
   public Pose2d getPose() {
@@ -122,17 +123,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
+    resetRobotPose(new Pose2d(new Translation2d(0, 0), new Rotation2d()));
   }
 
   public void resetRobotPose(Pose2d pose) {
-    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getHeading()), getModulePositions(), pose);
+    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
-
+    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
+    SmartDashboard.putNumber("heading", getHeading());
     // LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     // Boolean doRejectUpdate = false;
