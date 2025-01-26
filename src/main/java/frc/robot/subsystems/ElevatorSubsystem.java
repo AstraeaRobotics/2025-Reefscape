@@ -95,12 +95,9 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_leftMotor.set(0);
   }
 
-  public void setLeftMotorFeedForward(double speed) {
-    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(speed));
-  }
-
-  public void setRightMotorFeedForward(double speed) {
+  public void setMotorFeedForward(double speed){
     m_rightMotor.setVoltage(m_righElevatorFeedforward.calculate(speed));
+    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(-speed));
   }
 
   public void setElevatorVoltage(double voltage) {
