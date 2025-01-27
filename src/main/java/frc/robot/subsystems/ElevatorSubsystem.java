@@ -40,7 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   ElevatorStates m_state;
   double m_SetPoint;
 
-  AbsoluteEncoder elevatorEncoder;
+  RelativeEncoder elevatorEncoder;
 
   PIDController m_ElevatorPidController;
 
@@ -51,7 +51,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   public ElevatorSubsystem() {
     m_rightMotor = new SparkMax(0, MotorType.kBrushless); // NEED PORT # Later
     m_leftMotor = new SparkMax(0, MotorType.kBrushless);
-    elevatorEncoder = m_rightMotor.getAbsoluteEncoder();
+    elevatorEncoder = m_rightMotor.getEncoder();
 
     // m_desiredSetPoint = 0;
     m_state = ElevatorStates.kSource; // dont have or need states right now
@@ -59,7 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
     m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
 
-    m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kV, ElevatorConstants.kA);
+    m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
 
     configureMotors();
 
@@ -69,8 +69,8 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     SparkMaxConfig leftConfig = new SparkMaxConfig();
     SparkMaxConfig rightConfig = new SparkMaxConfig();
 
-    leftConfig.smartCurrentLimit(0).closedLoopRampRate(0);
-    rightConfig.smartCurrentLimit(0).closedLoopRampRate(0);
+    leftConfig.smartCurrentLimit(35).closedLoopRampRate(8);
+    rightConfig.smartCurrentLimit(35).closedLoopRampRate(8);
 
     m_leftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_rightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -129,6 +129,6 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
     SmartDashboard.putNumber("Elevator Speed", getMotorVelocity());
     SmartDashboard.putNumber("Elevator PID", getElevatorPID());
-    
+
   }
 }
