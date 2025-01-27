@@ -121,14 +121,15 @@ public class SwerveModule extends SubsystemBase {
     double[] optimizedModule = SwerveUtil.optimizeModule(getAngle(), moduleState.angle.getDegrees() + 180, moduleState.speedMetersPerSecond);
 
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
-    // driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1]));
-    driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
+    driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1]));
+    // driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("drivebase position", getDistance());
+    SmartDashboard.putNumber("input velocity", moduleState.angle.getDegrees() + 180);
     SmartDashboard.putNumber("Module velocity", driveEncoder.getVelocity());
   }
 }

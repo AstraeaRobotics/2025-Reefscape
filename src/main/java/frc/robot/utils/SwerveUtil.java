@@ -13,12 +13,12 @@ public class SwerveUtil {
         double[] optimizedModule = new double[2];
         double angleDifference = desiredAngle - currentAngle;
         optimizedModule[0] = desiredAngle;
-        optimizedModule[1] = -speed;
+        optimizedModule[1] = speed;
         
         // Optimizes the desired angle so the module never turns more than 90 degrees
         if(Math.abs(angleDifference) > 90 && Math.abs(angleDifference) < 270) {
             optimizedModule[0] = (desiredAngle + 180)  % 360;
-            optimizedModule[1] = speed;
+            optimizedModule[1] = -speed;
         }
 
         return optimizedModule;
@@ -29,6 +29,6 @@ public class SwerveUtil {
     }
 
     public static ChassisSpeeds driveInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {
-        return ChassisSpeeds.fromFieldRelativeSpeeds(-driveY, -driveX, rotation, Rotation2d.fromDegrees(heading));
+        return ChassisSpeeds.fromFieldRelativeSpeeds(-driveY, driveX, rotation, Rotation2d.fromDegrees(heading));
     }
 }
