@@ -72,10 +72,12 @@ public class SwerveModule extends SubsystemBase {
     turnMotorConfig
     .closedLoopRampRate(8)
     .smartCurrentLimit(35)
-    .idleMode(IdleMode.kCoast);
+    .idleMode(IdleMode.kCoast)
+    .inverted(true);
     turnMotorConfig.absoluteEncoder
     .positionConversionFactor(DrivebaseModuleConstants.kTurnEncoderPositionFactor)
-    .velocityConversionFactor(DrivebaseModuleConstants.kTurnEncoderVelocityFactor);
+    .velocityConversionFactor(DrivebaseModuleConstants.kTurnEncoderVelocityFactor)
+    .inverted(true);
 
     turnMotor.configure(turnMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -128,8 +130,6 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("drivebase position", getDistance());
-    SmartDashboard.putNumber("input velocity", moduleState.angle.getDegrees() + 180);
-    SmartDashboard.putNumber("Module velocity", driveEncoder.getVelocity());
+    SmartDashboard.putNumber("module angle", getAngle());
   }
 }

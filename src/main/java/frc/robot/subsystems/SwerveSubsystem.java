@@ -32,10 +32,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   SwerveModule[] swerveModules;
 
-  Translation2d m_frontLeftLocation = new Translation2d(DrivebaseConstants.kWheelBase / 2, -DrivebaseConstants.kTrackWidth / 2);
-  Translation2d m_frontRightLocation = new Translation2d(DrivebaseConstants.kWheelBase / 2, DrivebaseConstants.kTrackWidth / 2);
-  Translation2d m_backLeftLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, -DrivebaseConstants.kTrackWidth / 2);
-  Translation2d m_backRightLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, DrivebaseConstants.kTrackWidth / 2); 
+  Translation2d m_frontLeftLocation = new Translation2d(DrivebaseConstants.kWheelBase / 2, DrivebaseConstants.kTrackWidth / 2);
+  Translation2d m_frontRightLocation = new Translation2d(DrivebaseConstants.kWheelBase / 2, -DrivebaseConstants.kTrackWidth / 2);
+  Translation2d m_backLeftLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, DrivebaseConstants.kTrackWidth / 2);
+  Translation2d m_backRightLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, -DrivebaseConstants.kTrackWidth / 2); 
 
   SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
@@ -69,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
       this::resetRobotPose, 
       this::getRobotRelativeSpeeds, 
       (speeds, feedforwards) -> drive(speeds), 
-      new PPHolonomicDriveController(new PIDConstants(0.9, 0, 0), new PIDConstants(2.0, 0, 0)), 
+      new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0)), 
       config,
       () -> {
       // var alliance = DriverStation.getAlliance();
@@ -133,7 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(getHeading()), getModulePositions());
+    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
     SmartDashboard.putNumber("heading", getHeading());
     // LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
