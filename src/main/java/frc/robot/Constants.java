@@ -18,6 +18,7 @@ public class Constants {
         // Physical Constants
         public static final double kDriveGearRatio = 3.56;
         public static final double kWheelDiameter = Units.inchesToMeters(3);
+        public static final double kMaxDriveVoltage = 6.0;
 
         // Conversion Factors
         public static final int kTurnEncoderPositionFactor = 360;

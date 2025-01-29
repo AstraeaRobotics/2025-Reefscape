@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.proto.ChassisSpeedsProto;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.DrivebaseModuleConstants;
 
 public class SwerveUtil {
@@ -24,8 +25,8 @@ public class SwerveUtil {
         return optimizedModule;
     }
 
-    public static double getModuleVoltage(double speedMPS) {
-        return MathUtil.clamp(speedMPS * DrivebaseModuleConstants.driveKV, -6, 6);
+    public static double getModuleVoltage(double speedMPS, boolean slowMode) {
+        return MathUtil.clamp( slowMode ? (speedMPS * DrivebaseModuleConstants.driveKV) / 2 : (speedMPS * DrivebaseModuleConstants.driveKV), -DrivebaseModuleConstants.kMaxDriveVoltage, DrivebaseModuleConstants.kMaxDriveVoltage);
     }
 
     public static ChassisSpeeds driveInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {

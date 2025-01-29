@@ -68,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
       this::getPose, 
       this::resetRobotPose, 
       this::getRobotRelativeSpeeds, 
-      (speeds, feedforwards) -> drive(speeds), 
+      (speeds, feedforwards) -> drive(speeds, true), 
       new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0)), 
       config,
       () -> {
@@ -83,11 +83,11 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro.reset();
   }
 
-  public void drive(ChassisSpeeds speeds) {
+  public void drive(ChassisSpeeds speeds, boolean slowMode) {
     SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(speeds);
 
     for(int i = 0; i < swerveModuleStates.length; i++){
-      swerveModules[i].setState(swerveModuleStates[i]);
+      swerveModules[i].setState(swerveModuleStates[i], slowMode);
     }
   }
 

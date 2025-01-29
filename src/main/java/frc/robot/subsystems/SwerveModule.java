@@ -114,16 +114,16 @@ public class SwerveModule extends SubsystemBase {
     return moduleState;
   }
 
-  public void setState(SwerveModuleState state) {
+  public void setState(SwerveModuleState state, boolean slowMode) {
     moduleState = state;
-    drive();
+    drive(slowMode);
   }
 
-  public void drive() {
+  public void drive(boolean slowMode) {
     double[] optimizedModule = SwerveUtil.optimizeModule(getAngle(), moduleState.angle.getDegrees() + 180, moduleState.speedMetersPerSecond);
 
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
-    driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1]));
+    driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1], slowMode));
     // driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
   }
 
