@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
+import frc.robot.utils.Limelight;
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
@@ -35,6 +36,7 @@ public class AlgaeIntake extends SubsystemBase {
   private final SimpleMotorFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
   private double desiredSetpoint;
+  private final Limelight limelight; // instantiating the limelight 
 
   public AlgaeIntake() {
     m_pivot = new SparkMax(AlgaeConstants.kPivotPort, MotorType.kBrushless);
@@ -53,6 +55,9 @@ public class AlgaeIntake extends SubsystemBase {
 
     m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV, AlgaeConstants.intakeKA);
     m_pivotFeedforward = new SimpleMotorFeedforward(AlgaeConstants.pivotKS, AlgaeConstants.pivotKV, AlgaeConstants.pivotKA);
+
+
+    limelight = new Limelight("limelight"); //make a new instance of limelight 
   }
 
   private void configMotors(){
@@ -109,6 +114,15 @@ public class AlgaeIntake extends SubsystemBase {
   public void setPivot(double speed){
     m_pivot.setVoltage(m_pivotFeedforward.calculate(speed));
   }
+  public void alignToTarget() {
+    if (limelight.hasTarget()) {
+        double tx = limelight.getTx();
+        double alignmentSpeed = m_pid.calculate(tx, 0); // align based on the offset 
+        setPivotManual(alignmentSpeed);
+    } else {
+        setPivotManual(); 
+    }
+}
 
   
 
@@ -119,5 +133,10 @@ public class AlgaeIntake extends SubsystemBase {
     SmartDashboard.putNumber("Algae Intake Velocity", getIntakeVelocity());
     SmartDashboard.putNumber("Algae Pivot Velocity", getPivotEncoder());
     //setPivot(getPID());
+
+    SmartDashboard.putBoolean("Limelight Has Target", limelight.hasTarget());
+    SmartDashboard.putNumber("Limelight TX", limelight.getTx());
+    SmartDashboard.putNumber("Limelight TY", limelight.getTy());
+    SmartDashboard.putNumber("Limelight TA", limelight.getTa());
   }
 }
