@@ -36,7 +36,7 @@ public class AlgaeIntake extends SubsystemBase {
   private final SimpleMotorFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
   private double desiredSetpoint;
-  private final Limelight limelight; // instantiating the limelight 
+ 
 
   public AlgaeIntake() {
     m_pivot = new SparkMax(AlgaeConstants.kPivotPort, MotorType.kBrushless);
