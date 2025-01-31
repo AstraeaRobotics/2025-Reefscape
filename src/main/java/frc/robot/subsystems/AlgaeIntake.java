@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
-import frc.robot.utils.Limelight;
+
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
@@ -109,15 +109,7 @@ public class AlgaeIntake extends SubsystemBase {
   public void setPivot(double speed){
     m_pivot.setVoltage(m_pivotFeedforward.calculate(speed));
   }
-  public void alignToTarget() {
-    if (limelight.hasTarget()) {
-        double tx = limelight.getTx();
-        double alignmentSpeed = m_pid.calculate(tx, 0); // align based on the offset 
-        setPivotManual(alignmentSpeed);
-    } else {
-        setPivotManual(); 
-    }
-}
+
 
   
 
@@ -129,9 +121,6 @@ public class AlgaeIntake extends SubsystemBase {
     SmartDashboard.putNumber("Algae Pivot Velocity", getPivotEncoder());
     //setPivot(getPID());
 
-    SmartDashboard.putBoolean("Limelight Has Target", limelight.hasTarget());
-    SmartDashboard.putNumber("Limelight TX", limelight.getTx());
-    SmartDashboard.putNumber("Limelight TY", limelight.getTy());
-    SmartDashboard.putNumber("Limelight TA", limelight.getTa());
+    
   }
 }
