@@ -37,9 +37,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, m_driverController::getLeftX, m_driverController::getLeftY, m_driverController::getRightX));
-    
+    // Configure the trigger bindings    
     // autoChooser = AutoBuilder.buildAutoChooser();
 
     // SmartDashboard.putData("Auto Chooser", autoChooser);
