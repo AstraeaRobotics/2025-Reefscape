@@ -15,16 +15,15 @@ import frc.robot.utils.LimelightUtil;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RotationalAlign extends Command {
   SwerveSubsystem m_SwerveSubsystem;
-  NetworkTable limelight;
+  LimelightUtil limelight;
   PIDController turnPID;
   double turnKP;
   double turnKI; 
   double turnKD;
 
   /** Creates a new RotationalAlign. */
-  public RotationalAlign(SwerveSubsystem m_SwerveSubsystem, NetworkTable limelight) {
+  public RotationalAlign(SwerveSubsystem m_SwerveSubsystem) {
     this.m_SwerveSubsystem = m_SwerveSubsystem;
-    this.limelight = limelight;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_SwerveSubsystem);
