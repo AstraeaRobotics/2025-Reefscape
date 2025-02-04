@@ -55,7 +55,7 @@ public class AlgaeIntake extends SubsystemBase {
     desiredSetpoint = currState.getPivotPos();
 
     m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV, AlgaeConstants.intakeKA);
-    m_pivotFeedforward = new ArmFeedforward(AlgaeConstants.pivotKS, AlgaeConstants.pivotKG, AlgaeConstants.pivotKV);
+    m_pivotFeedforward = new ArmFeedforward(0, AlgaeConstants.pivotKG, 0);
   }
 
   private void configMotors(){
@@ -87,7 +87,8 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeR.configure(configIntakeR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public double getPivotEncoder(){
+  public double getPivotAngle(){
+    //add conversion factor here
     return m_pivotEncoder.getPosition();
   }
 
@@ -100,7 +101,7 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   public double getPID(){
-    return m_pid.calculate(getPivotEncoder(), desiredSetpoint);
+    return m_pid.calculate(getPivotAngle(), desiredSetpoint);
   }
 
   public void setIntakeManual(double speed){
@@ -131,8 +132,10 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeL.setVoltage(m_intakeFeedForward.calculate(speed));
   }
 
-  public void setPivot(double desiredAngle, double speed){
-    m_pivot.setVoltage(m_pivotFeedforward.calculate(desiredAngle, speed));
+  public void setPivot(double speed){
+    m_pivot.setVoltage(
+      getPID() + m_pivotFeedforward.calculate(getPivotAngle(), speed)
+      );
   }
 
 
@@ -140,16 +143,14 @@ public class AlgaeIntake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Algae Pivot Encoder Val", getPivotEncoder());
+    SmartDashboard.putNumber("Algae Pivot Encoder Val", getPivotAngle());
     SmartDashboard.putNumber("Algae PID output", getPID());
 
     //SmartDashboard.putNumber("Algae Pivot FF", m_pivotFeedforward.calculate(desiredSetpoint, getPID()));
     //SmartDashboard.putNumber("Algae Intake FF", m_intakeFeedForward.calculate(0.1));
 
     SmartDashboard.putNumber("Algae Intake Velocity", getIntakeVelocity());
-    SmartDashboard.putNumber("Algae Pivot Velocity", getPivotEncoder());
-
-    //setPivot(getPID());
+    SmartDashboard.putNumber("Algae Pivot Velocity", getPivotAngle());
 
     
   }

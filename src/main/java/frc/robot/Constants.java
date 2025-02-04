@@ -28,9 +28,7 @@ public final class Constants {
     public static final double intakeKS = 0;
     public static final double intakeKV = 0;
     public static final double intakeKA = 0;
-
-    public static final double pivotKS = 0;
-    public static final double pivotKV = 0;
+    
     public static final double pivotKG = 0;
   
     
