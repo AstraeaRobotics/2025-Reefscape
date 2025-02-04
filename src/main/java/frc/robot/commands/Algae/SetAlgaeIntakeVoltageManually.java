@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeIntake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetAlgaeIntakeVoltageManual extends Command {
+public class SetAlgaeIntakeVoltageManually extends Command {
   /** Creates a new SetAlgaeIntakeVoltageManual. */
 
   private final AlgaeIntake m_algae;
   private final double m_volts;
 
-  public SetAlgaeIntakeVoltageManual(AlgaeIntake algae, double voltage) {
+  public SetAlgaeIntakeVoltageManually(AlgaeIntake algae, double voltage) {
     m_algae = algae;
     m_volts = voltage;
     
