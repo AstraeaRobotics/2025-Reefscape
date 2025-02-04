@@ -90,6 +90,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
     SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
+    SmartDashboard.putNumber("Limelight TX", m_Limelight.getTx());
   }
 }
 
