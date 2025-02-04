@@ -36,7 +36,7 @@ public class CoralSubsystem extends SubsystemBase {
 
   PIDController m_coralPidController;
   
-  SimpleMotorFeedforward m_coralPivotFeedforward;
+  ArmFeedforward m_coralPivotFeedforward;
   SimpleMotorFeedforward m_coralLeftIntakeFeedforward;
   SimpleMotorFeedforward m_coralRightIntakeFeedforward;
   
@@ -56,7 +56,8 @@ public class CoralSubsystem extends SubsystemBase {
 
     m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
     m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
-    m_coralPivotFeedforward = new SimpleMotorFeedforward(CoralConstants.coralPivotkS, CoralConstants.coralPivotkV, CoralConstants.coralPivotkA);
+    m_coralPivotFeedforward = new ArmFeedforward(CoralConstants.coralPivotkS, CoralConstants.coralPivotkG, CoralConstants.coralPivotkV, CoralConstants.coralPivotkA);
+   
     configureMotors();
   }
 
@@ -72,8 +73,8 @@ public class CoralSubsystem extends SubsystemBase {
     coralRightIntakeMotor.setVoltage(m_coralRightIntakeFeedforward.calculate(speed));         
   }
 
-  public void setcoralPivotFeedForward(double speed){
-    coralPivotMotor.setVoltage(m_coralPivotFeedforward.calculate(speed));         
+  public void setcoralPivotFeedForward(double position, double speed){
+    coralPivotMotor.setVoltage(m_coralPivotFeedforward.calculate(position, speed));         
   }
 
   public void setLeftCoralIntakeVoltage(double voltage){
