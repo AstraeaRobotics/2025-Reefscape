@@ -24,10 +24,15 @@ public final class Constants {
     
     public static final int kIntakePortL = 1;
     public static final int kIntakePortR = 3;
+
     public static final double intakeKS = 0;
     public static final double intakeKV = 0;
+    public static final double intakeKA = 0;
+
     public static final double pivotKS = 0;
     public static final double pivotKV = 0;
+    public static final double pivotKG = 0;
+  
     
     public enum AlgaeStates{
       kOut(2),
@@ -42,12 +47,6 @@ public final class Constants {
       public double getPivotPos(){
         return kPivotPos;
       }
-
     }
-
-    public static double pivotKG;
-    public static double intakeKA;
-    public static double pivotKA;
   }
-
-  }
+}
