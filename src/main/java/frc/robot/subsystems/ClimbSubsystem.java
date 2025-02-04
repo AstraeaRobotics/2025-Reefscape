@@ -22,8 +22,10 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.Constants.ClimbConstants.ClimbStates;
+import frc.robot.utils.Limelight;
 
 public class ClimbSubsystem extends SubsystemBase {
+
   /** Creates a new ClimbSubsystem. */
   private TalonFX m_climbMotor;
   
@@ -32,6 +34,7 @@ public class ClimbSubsystem extends SubsystemBase {
   VelocityVoltage m_climbVelocity;
   ClimbStates m_climbState;
   double desiredSetpoint;
+  Limelight m_Limelight;
 
   public ClimbSubsystem() {
     m_climbMotor = new TalonFX(0);
@@ -42,6 +45,8 @@ public class ClimbSubsystem extends SubsystemBase {
     
     m_climbState = ClimbStates.kTop;
     desiredSetpoint = m_climbState.getClimbSetpoint();
+
+    m_Limelight = new Limelight();
   }
   public void configureMotors() {
     m_climbConfigs.kS = 0.0;
@@ -71,6 +76,13 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbState = tempState;
     desiredSetpoint = m_climbState.getClimbSetpoint();
   }
+
+  public Limelight getLimelight() {
+
+    return m_Limelight;
+
+  }
+
 
 
   @Override
