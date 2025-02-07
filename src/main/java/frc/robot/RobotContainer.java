@@ -54,8 +54,8 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 0.1));
-    kl1.whileTrue(new IntakeCoral(m_coralSubsystem, 0.1));
+    kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 1));
+    kl1.whileTrue(new IntakeCoral(m_coralSubsystem, 1));
 
   }
 
