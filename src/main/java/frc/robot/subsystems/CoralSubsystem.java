@@ -41,9 +41,9 @@ public class CoralSubsystem extends SubsystemBase {
   SimpleMotorFeedforward m_coralRightIntakeFeedforward;
   
   public CoralSubsystem() {
-    coralLeftIntakeMotor = new SparkMax(0, MotorType.kBrushless); // TO DO - put actual device motor IDs
-    coralRightIntakeMotor = new SparkMax(0, MotorType.kBrushless); 
-    coralPivotMotor = new SparkMax(0, MotorType.kBrushless);
+    coralLeftIntakeMotor = new SparkMax(1, MotorType.kBrushless); // TO DO - put actual device motor IDs
+    coralRightIntakeMotor = new SparkMax(2, MotorType.kBrushless); 
+    coralPivotMotor = new SparkMax(3, MotorType.kBrushless);
 
     coralLeftIntakeEncoder = coralLeftIntakeMotor.getEncoder();
     coralRightIntakeEncoder = coralRightIntakeMotor.getEncoder();
@@ -130,14 +130,20 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   private void configureMotors(){
+
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
     SparkMaxConfig rightIntakeConfig = new SparkMaxConfig();
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
     //config.smartCurrentLimit(0);//TO DO find values for limit and rate
     //config.closedLoopRampRate(0);
-    pivotConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-    leftIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-    rightIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+    // pivotConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+    // leftIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+    // rightIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+
+    pivotConfig.smartCurrentLimit(35);
+    leftIntakeConfig.smartCurrentLimit(35);
+    rightIntakeConfig.smartCurrentLimit(35).inverted(true);
+
 
     coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -155,6 +161,5 @@ public class CoralSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Coral Right Intake Motor Velocity", coralRightIntakeEncoder.getVelocity());
     SmartDashboard.putNumber("Coral Pivot Motor Velocity", coralPivotEncoder.getVelocity());
 
-    //setCoralMotorPID();
   }
 }
