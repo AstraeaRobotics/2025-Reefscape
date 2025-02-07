@@ -23,11 +23,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 //import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-
-
 
 
 public class ElevatorSubsystem extends SubsystemBase {// 2 neos
@@ -46,6 +46,10 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
   ElevatorFeedforward m_leftElevatorFeedforward;
   ElevatorFeedforward m_righElevatorFeedforward;
+
+  TrapezoidProfile trapezoidProfile;
+  TrapezoidProfile.State goalState;
+  TrapezoidProfile.State setpointState;
   // ElevatorFeedforward feedforward;
 
   public ElevatorSubsystem() {
@@ -60,6 +64,10 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
 
     m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
+
+    trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0, 0)); 
+    goalState = new TrapezoidProfile.State();
+    setpointState = new TrapezoidProfile.State();
 
     configureMotors();
 
@@ -121,12 +129,17 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   public double getMotorVelocity() {
     return elevatorEncoder.getVelocity();
   }
+
+  public double getElevatorVoltage() {
+    return m_leftMotor.getBusVoltage();
+  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     //setSpeed(m_ElevatorPidController.calculate(getEncoder(), m_desiredSetPoint));
     SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
+    SmartDashboard.putNumber("Elevator Voltage", getElevatorVoltage());
     SmartDashboard.putNumber("Elevator Speed", getMotorVelocity());
     SmartDashboard.putNumber("Elevator PID", getElevatorPID());
 
