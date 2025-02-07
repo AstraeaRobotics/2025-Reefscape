@@ -27,6 +27,7 @@ public final class Constants {
     public static final double coralIntakekA = 0.0;
 
     public static final double coralPivotkS = 0.0;
+    public static final double coralPivotkG = 0.0;
     public static final double coralPivotkV = 0.0;
     public static final double coralPivotkA = 0.0;
 
