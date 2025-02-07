@@ -135,9 +135,17 @@ public class CoralSubsystem extends SubsystemBase {
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
     //config.smartCurrentLimit(0);//TO DO find values for limit and rate
     //config.closedLoopRampRate(0);
+<<<<<<< HEAD
+    pivotConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+    intakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+=======
     pivotConfig.smartCurrentLimit(0).closedLoopRampRate(0);
     rightIntakeConfig.smartCurrentLimit(0).closedLoopRampRate(0);
     leftIntakeConfig.smartCurrentLimit(0).closedLoopRampRate(0);
+<<<<<<< Updated upstream
+=======
+>>>>>>> 2d602620bfe5a00207fd21a4f919e8040b28a8e2
+>>>>>>> Stashed changes
 
     coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

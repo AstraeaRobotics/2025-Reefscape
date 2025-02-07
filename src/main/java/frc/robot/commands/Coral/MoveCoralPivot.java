@@ -11,11 +11,11 @@ import frc.robot.subsystems.CoralSubsystem;
 public class MoveCoralPivot extends Command {
   /** Creates a new MoveCoralPivot. */
   CoralSubsystem m_CoralSubsystem;
-  double speed;
+  double voltage;
 
-  public MoveCoralPivot(CoralSubsystem m_CoralSubsystem, double speed) {
+  public MoveCoralPivot(CoralSubsystem m_CoralSubsystem, double voltage) {
     this.m_CoralSubsystem = m_CoralSubsystem;
-    this.speed = speed;
+    this.voltage = voltage;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_CoralSubsystem);
 
@@ -28,13 +28,13 @@ public class MoveCoralPivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_CoralSubsystem.setCoralPivotMotor(speed);
+    m_CoralSubsystem.setcoralIntakeVoltage(voltage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_CoralSubsystem.setCoralPivotMotor(0);
+    m_CoralSubsystem.setcoralIntakeVoltage(0);
   }
 
   // Returns true when the command should end.
