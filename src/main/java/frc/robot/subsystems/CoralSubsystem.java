@@ -135,17 +135,9 @@ public class CoralSubsystem extends SubsystemBase {
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
     //config.smartCurrentLimit(0);//TO DO find values for limit and rate
     //config.closedLoopRampRate(0);
-<<<<<<< HEAD
     pivotConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-    intakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-=======
-    pivotConfig.smartCurrentLimit(0).closedLoopRampRate(0);
-    rightIntakeConfig.smartCurrentLimit(0).closedLoopRampRate(0);
-    leftIntakeConfig.smartCurrentLimit(0).closedLoopRampRate(0);
-<<<<<<< Updated upstream
-=======
->>>>>>> 2d602620bfe5a00207fd21a4f919e8040b28a8e2
->>>>>>> Stashed changes
+    leftIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
+    rightIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
 
     coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -159,8 +151,8 @@ public class CoralSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Pivot Encoder", getCoralPivotEncoder());
     SmartDashboard.putNumber("Coral PID Output", getCoralMotorPID());
-    SmartDashboard.putNumber("Coral Intake Motor Velocity", coralLeftIntakeEncoder.getVelocity());
-    SmartDashboard.putNumber("Coral Intake Motor Velocity", coralRightIntakeEncoder.getVelocity());
+    SmartDashboard.putNumber("Coral Left Intake Motor Velocity", coralLeftIntakeEncoder.getVelocity());
+    SmartDashboard.putNumber("Coral Right Intake Motor Velocity", coralRightIntakeEncoder.getVelocity());
     SmartDashboard.putNumber("Coral Pivot Motor Velocity", coralPivotEncoder.getVelocity());
 
     //setCoralMotorPID();

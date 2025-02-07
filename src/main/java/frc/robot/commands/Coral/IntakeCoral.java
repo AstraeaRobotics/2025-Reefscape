@@ -27,33 +27,15 @@ public class IntakeCoral extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-<<<<<<< Updated upstream
-    m_CoralSubsystem.setLeftCoralIntakeMotor(speed);
-    m_CoralSubsystem.setRightCoralIntakeMotor(speed);
-=======
-<<<<<<< HEAD
-    m_CoralSubsystem.setcoralIntakeVoltage(voltage);
-=======
-    m_CoralSubsystem.setLeftCoralIntakeMotor(speed);
-    m_CoralSubsystem.setRightCoralIntakeMotor(speed);
->>>>>>> 2d602620bfe5a00207fd21a4f919e8040b28a8e2
->>>>>>> Stashed changes
+    m_CoralSubsystem.setLeftCoralIntakeVoltage(voltage);
+    m_CoralSubsystem.setRightCoralIntakeVoltage(voltage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-<<<<<<< Updated upstream
-    m_CoralSubsystem.setLeftCoralIntakeMotor(0);
-    m_CoralSubsystem.setRightCoralIntakeMotor(0);
-=======
-<<<<<<< HEAD
-    m_CoralSubsystem.setcoralIntakeVoltage(0);
-=======
-    m_CoralSubsystem.setLeftCoralIntakeMotor(0);
-    m_CoralSubsystem.setRightCoralIntakeMotor(0);
->>>>>>> 2d602620bfe5a00207fd21a4f919e8040b28a8e2
->>>>>>> Stashed changes
+    m_CoralSubsystem.setLeftCoralIntakeVoltage(0);
+    m_CoralSubsystem.setRightCoralIntakeVoltage(0);
   }
 
   // Returns true when the command should end.
