@@ -16,7 +16,7 @@ public class SetCoralState extends InstantCommand {
   CoralStates m_CoralState;
   public SetCoralState(CoralSubsystem m_CoralSubsystem,CoralStates m_CoralStates ) {
     this.m_CoralSubsystem = m_CoralSubsystem;
-    this.m_CoralState = m_CoralState;
+    this.m_CoralState = m_CoralStates;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_CoralSubsystem);
   }

@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -102,16 +103,9 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public double getCoralPivotEncoder(){
-    return coralPivotEncoder.getPosition();
+    return (1-coralPivotEncoder.getPosition());
   }
 
-  public double getLeftCoralIntakeEncoder(){
-    return coralLeftIntakeEncoder.getPosition();
-  }
-
-  public double getRightCoralIntakeEncoder(){
-    return coralRightIntakeEncoder.getPosition();
-  }
 
   public void setCoralState(CoralStates tempState){
     m_coralState = tempState;
@@ -126,7 +120,7 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public void setCoralMotorPID(double position){
-    coralPivotMotor.set(MathUtil.clamp((getCoralMotorPID()+ getCoralPivotFeedForward(position, 0)),-0.8,0.8));
+    coralPivotMotor.set(MathUtil.clamp(getCoralMotorPID(),-0.5,0.5));
   }
 
   private void configureMotors(){
@@ -140,7 +134,7 @@ public class CoralSubsystem extends SubsystemBase {
     // leftIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
     // rightIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
 
-    pivotConfig.smartCurrentLimit(35);
+    pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kCoast).inverted(false);
     leftIntakeConfig.smartCurrentLimit(35);
     rightIntakeConfig.smartCurrentLimit(35).inverted(true);
 
@@ -148,18 +142,15 @@ public class CoralSubsystem extends SubsystemBase {
     coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralPivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
   }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral Pivot Encoder", getCoralPivotEncoder());
-    SmartDashboard.putNumber("Coral PID Output", getCoralMotorPID());
-    SmartDashboard.putNumber("Coral Left Intake Motor Velocity", coralLeftIntakeEncoder.getVelocity());
-    SmartDashboard.putNumber("Coral Right Intake Motor Velocity", coralRightIntakeEncoder.getVelocity());
-    SmartDashboard.putNumber("Coral Pivot Motor Velocity", coralPivotEncoder.getVelocity());
-
+    SmartDashboard.putNumber("Coral pivot encoder", getCoralPivotEncoder());
+    SmartDashboard.putNumber("Coral Pivot PID Output", getCoralMotorPID());
+    SmartDashboard.putNumber("Coral pivot setpoint", coralSetpoint);
+    setCoralMotorPID(coralSetpoint);
   }
 }
