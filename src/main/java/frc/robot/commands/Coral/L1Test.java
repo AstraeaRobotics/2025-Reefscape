@@ -25,16 +25,15 @@ public class L1Test extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_CoralSubsystem.setLeftCoralIntakeVoltage(1);
-    m_CoralSubsystem.setRightCoralIntakeVoltage(-5);
+    m_CoralSubsystem.setLeftVoltage(1);
+    m_CoralSubsystem.setRightVoltage(-5);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_CoralSubsystem.setLeftCoralIntakeVoltage(0);
-    m_CoralSubsystem.setRightCoralIntakeVoltage(0);
+    m_CoralSubsystem.setIntakeVoltage(0);
   }
 
   // Returns true when the command should end.

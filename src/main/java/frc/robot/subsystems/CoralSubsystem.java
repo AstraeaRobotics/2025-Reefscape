@@ -82,30 +82,26 @@ public class CoralSubsystem extends SubsystemBase {
 
   }
 
-  public void setLeftCoralIntakeVoltage(double voltage){
+  public void setLeftVoltage(double voltage){
     coralLeftIntakeMotor.setVoltage(voltage);         
   }
 
-  public void setRightCoralIntakeVoltage(double voltage){
+  public void setRightVoltage(double voltage){
     coralRightIntakeMotor.setVoltage(voltage);         
   }
 
-  public void setcoralPivotVoltage(double voltage){
+  public void setIntakeVoltage(double voltage) {
+    setLeftVoltage(voltage);
+    setRightVoltage(voltage);
+  }
+
+  public void setPivotVoltage(double voltage){
     coralPivotMotor.setVoltage(voltage);         
   }
 
-  public void setLeftCoralIntakeMotor(double speed){
-    coralLeftIntakeMotor.set(speed);
-  }
-
-  public void setRightCoralIntakeMotor(double speed){
-    coralRightIntakeMotor.set(speed);
-  }
-
-  public double getCoralPivotEncoder(){
+  public double getPivotEncoder(){
     return (1-coralPivotEncoder.getPosition());
   }
-
 
   public void setCoralState(CoralStates tempState){
     m_coralState = tempState;
@@ -115,12 +111,12 @@ public class CoralSubsystem extends SubsystemBase {
     return m_coralState;
   }
 
-  public double getCoralMotorPID(){
-    return m_coralPidController.calculate(getCoralPivotEncoder(), coralSetpoint);
+  public double getPivotPID(){
+    return m_coralPidController.calculate(getPivotEncoder(), coralSetpoint);
   }
 
-  public void setCoralMotorPID(double position){
-    coralPivotMotor.set(MathUtil.clamp(getCoralMotorPID(),-0.5,0.5));
+  public void setPivotPID(double position){
+    coralPivotMotor.set(MathUtil.clamp(getPivotPID(),-0.5,0.5));
   }
 
   private void configureMotors(){
@@ -128,16 +124,10 @@ public class CoralSubsystem extends SubsystemBase {
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
     SparkMaxConfig rightIntakeConfig = new SparkMaxConfig();
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
-    //config.smartCurrentLimit(0);//TO DO find values for limit and rate
-    //config.closedLoopRampRate(0);
-    // pivotConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-    // leftIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
-    // rightIntakeConfig.smartCurrentLimit(35).closedLoopRampRate(0);
 
     pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kCoast).inverted(false);
     leftIntakeConfig.smartCurrentLimit(35);
     rightIntakeConfig.smartCurrentLimit(35).inverted(true);
-
 
     coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -148,9 +138,8 @@ public class CoralSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral pivot encoder", getCoralPivotEncoder());
-    SmartDashboard.putNumber("Coral Pivot PID Output", getCoralMotorPID());
-    SmartDashboard.putNumber("Coral pivot setpoint", coralSetpoint);
-    setCoralMotorPID(coralSetpoint);
+    SmartDashboard.putNumber("Coral pivot encoder", getPivotEncoder());
+    SmartDashboard.putNumber("Coral Pivot PID Output", getPivotPID());
+    setPivotPID(coralSetpoint);
   }
 }
