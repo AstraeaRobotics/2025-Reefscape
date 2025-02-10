@@ -69,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
       this::resetRobotPose, 
       this::getRobotRelativeSpeeds, 
       (speeds, feedforwards) -> drive(speeds, true), 
-      new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0)), 
+      new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0.1)), 
       config,
       () -> {
       // var alliance = DriverStation.getAlliance();

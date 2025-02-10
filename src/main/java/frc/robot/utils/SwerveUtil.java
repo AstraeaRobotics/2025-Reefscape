@@ -26,7 +26,7 @@ public class SwerveUtil {
     }
 
     public static double getModuleVoltage(double speedMPS, boolean slowMode) {
-        return MathUtil.clamp( slowMode ? (speedMPS * DrivebaseModuleConstants.driveKV) / 2 : (speedMPS * DrivebaseModuleConstants.driveKV), -DrivebaseModuleConstants.kMaxDriveVoltage, DrivebaseModuleConstants.kMaxDriveVoltage);
+        return MathUtil.clamp(slowMode ? (speedMPS * DrivebaseModuleConstants.driveKV) / 1.5 : (speedMPS * DrivebaseModuleConstants.driveKV), -DrivebaseModuleConstants.kMaxDriveVoltage, DrivebaseModuleConstants.kMaxDriveVoltage);
     }
 
     public static ChassisSpeeds driveInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {

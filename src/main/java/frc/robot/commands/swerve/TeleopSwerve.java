@@ -4,6 +4,7 @@
 
 package frc.robot.commands.swerve;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,16 +21,16 @@ public class TeleopSwerve extends Command {
   DoubleSupplier m_driveX;
   DoubleSupplier m_driveY;
   DoubleSupplier m_rotation;
-  DoubleSupplier rightL1;
+  DoubleSupplier r2Axis;
 
 
-  public TeleopSwerve(SwerveSubsystem swerveSub, DoubleSupplier driveX, DoubleSupplier driveY, DoubleSupplier rotation, DoubleSupplier rightL1) {
+  public TeleopSwerve(SwerveSubsystem swerveSub, DoubleSupplier driveX, DoubleSupplier driveY, DoubleSupplier rotation, DoubleSupplier r2Axis) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveX = driveX;
     m_driveY = driveY;
     m_rotation = rotation;
     m_SwerveSubsystem = swerveSub;
-    this.rightL1 = rightL1;
+    this.r2Axis = r2Axis;
 
     addRequirements(swerveSub);
   }
@@ -42,7 +43,7 @@ public class TeleopSwerve extends Command {
   @Override
   
   public void execute() {
-    boolean slowMode = rightL1.getAsDouble() > 0.1;
+    boolean slowMode = r2Axis.getAsDouble() > -0.8;
 
     if(Math.abs(m_driveX.getAsDouble()) > 0.2 || Math.abs(m_driveY.getAsDouble()) > 0.2) {
       m_SwerveSubsystem.drive(SwerveUtil.driveInputToChassisSpeeds(m_driveX.getAsDouble(), m_driveY.getAsDouble(), m_rotation.getAsDouble(), m_SwerveSubsystem.getHeading()), slowMode);
@@ -53,6 +54,9 @@ public class TeleopSwerve extends Command {
     else{
       m_SwerveSubsystem.drive(SwerveUtil.driveInputToChassisSpeeds(0, 0, 0, m_SwerveSubsystem.getHeading()), slowMode);
     }
+
+    SmartDashboard.putBoolean("slowMode", slowMode);
+    SmartDashboard.putNumber("r2", r2Axis.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
