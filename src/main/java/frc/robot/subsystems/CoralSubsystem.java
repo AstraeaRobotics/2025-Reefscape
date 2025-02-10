@@ -103,6 +103,10 @@ public class CoralSubsystem extends SubsystemBase {
     return (1-coralPivotEncoder.getPosition());
   }
 
+  public double getPivotEncoderFeedforward(){
+   return (2.0 * Math.PI * getPivotEncoder());
+  }
+
   public void setState(CoralStates tempState){
     m_coralState = tempState;
     coralSetpoint = m_coralState.getCoralSetpoint();
@@ -115,8 +119,12 @@ public class CoralSubsystem extends SubsystemBase {
     return m_coralPidController.calculate(getPivotEncoder(), coralSetpoint);
   }
 
+  public double getPivotOutput() {
+    return getPivotPID() + getCoralPivotFeedForward(getPivotEncoderFeedforward(), 0);
+  }
+
   public void setPivotPID(double position){
-    coralPivotMotor.set(MathUtil.clamp(getPivotPID(),-0.5,0.5));
+    coralPivotMotor.set(MathUtil.clamp(getPivotPID() + getCoralPivotFeedForward(getPivotEncoderFeedforward(), 0),-0.5,0.5));
   }
 
   private void configureMotors(){
@@ -139,7 +147,8 @@ public class CoralSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral pivot encoder", getPivotEncoder());
-    SmartDashboard.putNumber("Coral Pivot PID Output", getPivotPID());
-    setPivotPID(coralSetpoint);
+    SmartDashboard.putNumber("Coral Pivot PID Output", getPivotOutput());
+    SmartDashboard.putNumber("Coral Pivot Angle", getPivotEncoderFeedforward());
+    // setPivotPID(coralSetpoint);
   }
 }
