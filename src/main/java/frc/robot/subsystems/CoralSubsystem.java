@@ -103,7 +103,7 @@ public class CoralSubsystem extends SubsystemBase {
     return (1-coralPivotEncoder.getPosition());
   }
 
-  public void setCoralState(CoralStates tempState){
+  public void setState(CoralStates tempState){
     m_coralState = tempState;
     coralSetpoint = m_coralState.getCoralSetpoint();
   }

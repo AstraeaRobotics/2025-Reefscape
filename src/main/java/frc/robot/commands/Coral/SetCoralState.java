@@ -24,6 +24,6 @@ public class SetCoralState extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_CoralSubsystem.setCoralState(m_CoralState);
+    m_CoralSubsystem.setState(m_CoralState);
   }
 }
