@@ -46,6 +46,7 @@ public class AlgaeIntake extends SubsystemBase {
 
     m_pid = new PIDController(AlgaeConstants.kP, 0, 0);
     m_pivotEncoder = m_pivot.getAbsoluteEncoder();
+    
     m_intakeEncoder = m_intakeL.getEncoder();
     m_intakeEncoder.setPosition(0);
 
