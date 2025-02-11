@@ -10,6 +10,8 @@ import frc.robot.commands.Algae.SetAlgaeIntakeVoltageManually;
 import frc.robot.commands.Algae.SetAlgaePivotVoltageManually;
 import frc.robot.subsystems.AlgaeIntake;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -44,7 +46,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     kTriangle.whileTrue(new SetAlgaeIntakeVoltageManually(m_algaeIntake, 1));
-    kCircle.whileTrue(new SetAlgaePivotVoltageManually(m_algaeIntake, 1));
+    kTriangle.whileTrue(new SetAlgaePivotVoltageManually(m_algaeIntake, 1));
 
   }
 
@@ -53,7 +55,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-
-  // }
+  public Command getAutonomousCommand() {
+    // DO NOT RUN ANY AUTO
+    return new Command() { };
+  }
 }
