@@ -133,9 +133,9 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeL.setVoltage(m_intakeFeedForward.calculate(speed));
   }
 
-  public void setPivot(double speed){
+  public void setPivot(){
     m_pivot.setVoltage(
-      getPID() + m_pivotFeedforward.calculate(getPivotAngle(), speed)
+      getPID() + m_pivotFeedforward.calculate(desiredSetpoint * 2 * Math.PI - (Math.PI / 2), 0)
       );
   }
 
@@ -146,6 +146,7 @@ public class AlgaeIntake extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Algae Pivot Encoder Val", getPivotAngle());
     SmartDashboard.putNumber("Algae PID output", getPID());
+    SmartDashboard.putNumber("Algae Pivot Feedforward Value", m_pivotFeedforward.calculate(desiredSetpoint * 2 * Math.PI - (Math.PI / 2), 0));
 
     //SmartDashboard.putNumber("Algae Pivot FF", m_pivotFeedforward.calculate(desiredSetpoint, getPID()));
     //SmartDashboard.putNumber("Algae Intake FF", m_intakeFeedForward.calculate(0.1));
@@ -153,6 +154,6 @@ public class AlgaeIntake extends SubsystemBase {
     SmartDashboard.putNumber("Algae Intake Velocity", getIntakeVelocity());
     SmartDashboard.putNumber("Algae Pivot Velocity", getPivotAngle());
 
-    
+    //setPivot();
   }
 }
