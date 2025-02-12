@@ -67,21 +67,21 @@ public class AlgaeIntake extends SubsystemBase {
 
     SparkMaxConfig configPivot = new SparkMaxConfig();
     
-    configPivot.smartCurrentLimit(10);
+    configPivot.smartCurrentLimit(35);
     configPivot.closedLoopRampRate(10);
 
     m_pivot.configure(configPivot, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig configIntakeL = new SparkMaxConfig();
 
-    configIntakeL.smartCurrentLimit(10);
+    configIntakeL.smartCurrentLimit(35);
     configIntakeL.closedLoopRampRate(10);
 
     m_intakeL.configure(configIntakeL, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig configIntakeR = new SparkMaxConfig();
 
-    configIntakeR.smartCurrentLimit(10);
+    configIntakeR.smartCurrentLimit(35);
     configIntakeR.closedLoopRampRate(10);
     configIntakeR.inverted(true);
 
