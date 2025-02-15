@@ -45,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   PIDController m_ElevatorPidController;
 
   ElevatorFeedforward m_leftElevatorFeedforward;
-  ElevatorFeedforward m_righElevatorFeedforward;
+  ElevatorFeedforward m_rightElevatorFeedforward;
 
   TrapezoidProfile trapezoidProfile;
   TrapezoidProfile.State goalState;
@@ -64,10 +64,11 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
 
     m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
+    m_rightElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
 
     trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0, 0)); 
-    goalState = new TrapezoidProfile.State();
-    setpointState = new TrapezoidProfile.State();
+    goalState = new TrapezoidProfile.State(0,0); //test for values
+    setpointState = new TrapezoidProfile.State(0,0);
 
     configureMotors();
 
@@ -89,6 +90,16 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_SetPoint = m_state.getElevatorSetPoint();
   }
 
+  public TrapezoidProfile.State setTrapezoidState(double sec, TrapezoidProfile.State startState, TrapezoidProfile.State endState) {
+    return trapezoidProfile.calculate(sec, startState, endState); // starts at startState, ends at endState, retturns motion profile state after the number of sec inputed
+  }
+
+  public void movetoTrapezoidState(TrapezoidProfile.State state) {
+    m_ElevatorPidController.calculate(elevatorEncoder.getPosition(), state.position);
+  }
+
+
+
   public ElevatorStates getElevatorState() {
     return m_state;
   }
@@ -104,13 +115,18 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   }
 
   public void setMotorFeedForward(double speed){
-    m_rightMotor.setVoltage(m_righElevatorFeedforward.calculate(speed));
+    m_rightMotor.setVoltage(m_rightElevatorFeedforward.calculate(speed));
     m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(-speed));
   }
 
   public void setElevatorVoltage(double voltage) {
     m_rightMotor.setVoltage(voltage);
     m_leftMotor.setVoltage(voltage);
+  }
+
+  public void setElevatorVoltageBySpeed(double speed) {
+    m_rightMotor.setVoltage(m_rightElevatorFeedforward.calculate(speed));
+    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(speed));
   }
 
   public double getElevatorEncoder() {
