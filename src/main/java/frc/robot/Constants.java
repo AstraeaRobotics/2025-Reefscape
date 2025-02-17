@@ -17,9 +17,9 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class CoralConstants {
-    public static final double kP = 0.87; // TO DO - tune PID
+    public static final double kP = 0.9; // TO DO - tune PID
     public static final double kI = 0.0;
-    public static final double kD = 0.07;
+    public static final double kD = 0.0;
 
     //feed forward constants 
     public static final double coralIntakekS = 0.0;//TO DO - find feed forward values
@@ -27,14 +27,14 @@ public final class Constants {
     public static final double coralIntakekA = 0.0;
 
     public static final double coralPivotkS = 0.0;
-    public static final double coralPivotkG = 0.05; // 0.48, .07
+    public static final double coralPivotkG = 0.04; // 0.48, .07
     public static final double coralPivotkV = 0.0;
     public static final double coralPivotkA = 0.0;
 
     public enum CoralStates{
       kRest(0.1),
       kL1(.272),  //TO DO - find encoder values
-      kL2(.455),
+      kL2(.43),
       kL3(0),
       kL4(0),
       kSource(0);

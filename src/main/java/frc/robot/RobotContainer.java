@@ -8,8 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Coral.IntakeCoral;
-import frc.robot.commands.Coral.L1Test;
+// import frc.robot.commands.Coral.IntakeCoral;
+// import frc.robot.commands.Coral.L1Test;
 import frc.robot.commands.Coral.MoveCoralPivot;
 import frc.robot.commands.Coral.SetCoralState;
 import frc.robot.subsystems.CoralSubsystem;
@@ -61,16 +61,10 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, .48));
-    //kr1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
-    kl1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
-    // kCircle.whileTrue(new IntakeCoral(m_coralSubsystem, 1));
-    // kTriangle.whileTrue(new L1Test(m_coralSubsystem));
     kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
     kTriangle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
     kCross.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest));
-    kSquare.whileTrue(new L1Test(m_coralSubsystem));
-
+    kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 0.3));
   }
 
   /**
