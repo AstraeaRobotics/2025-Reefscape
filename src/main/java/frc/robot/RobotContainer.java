@@ -12,6 +12,8 @@ import frc.robot.commands.ExampleCommand;
 // import frc.robot.commands.Coral.L1Test;
 import frc.robot.commands.Coral.MoveCoralPivot;
 import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.algae.SetPivotVoltage;
+import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -29,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CoralSubsystem m_coralSubsystem = new CoralSubsystem();
+  private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
 
   private final PS4Controller m_Controller = new PS4Controller(0);
 
@@ -55,16 +58,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    //new Trigger(m_exampleSubsystem::exampleCondition)
-    //    .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
+    // kTriangle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
+    // kCross.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest));
+    // kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 0.3));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
-    kTriangle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
-    kCross.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest));
-    kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 0.3));
+    // kr1.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, 0.1));
+    // kl1.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, -0.1));
   }
 
   /**

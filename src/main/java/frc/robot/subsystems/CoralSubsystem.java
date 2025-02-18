@@ -44,7 +44,7 @@ public class CoralSubsystem extends SubsystemBase {
   public CoralSubsystem() {
     // coralLeftIntakeMotor = new SparkMax(1, MotorType.kBrushless); // TO DO - put actual device motor IDs
     // coralRightIntakeMotor = new SparkMax(2, MotorType.kBrushless); 
-    coralPivotMotor = new SparkMax(3, MotorType.kBrushless);
+    coralPivotMotor = new SparkMax(2, MotorType.kBrushless);
 
     // coralLeftIntakeEncoder = coralLeftIntakeMotor.getEncoder();
     // coralRightIntakeEncoder = coralRightIntakeMotor.getEncoder();
@@ -99,7 +99,7 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public double getPivotEncoder(){
-    return (1-coralPivotEncoder.getPosition());
+    return (coralPivotEncoder.getPosition());
   }
 
   public void setState(CoralStates tempState){
@@ -147,8 +147,9 @@ public class CoralSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("encoder", getPivotEncoder());
-    SmartDashboard.putNumber("pivot setpoint", coralSetpoint);
-    coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
+    SmartDashboard.putNumber("Coral encoder value", getPivotEncoder());
+    SmartDashboard.putNumber("Coral desired setpoint", coralSetpoint);
+    SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
+    // coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
   }
 }
