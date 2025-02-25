@@ -18,12 +18,17 @@ import frc.robot.commands.algae.SetPivotVoltage;
 import frc.robot.commands.algae.SetState;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
+import frc.robot.Constants.ElevatorConstants.ElevatorStates;
+import frc.robot.commands.MoveElevator;
+import frc.robot.commands.ResetElevatorPosition;
+import frc.robot.commands.SetElevatorState;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,6 +49,23 @@ public class RobotContainer {
   private final JoystickButton kTriangle = new JoystickButton(m_Controller, PS4Controller.Button.kTriangle.value);
   private final JoystickButton kCross = new JoystickButton(m_Controller, PS4Controller.Button.kCross.value);
   private final JoystickButton kSquare = new JoystickButton(m_Controller, PS4Controller.Button.kSquare.value);
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final PS4Controller m_Controller = new PS4Controller(0);
+
+  private final JoystickButton kCircle = new JoystickButton(m_Controller,PS4Controller.Button.kCircle.value);
+  private final JoystickButton kSquare = new JoystickButton(m_Controller, PS4Controller.Button.kSquare.value);
+  private final JoystickButton kCross = new JoystickButton(m_Controller, PS4Controller.Button.kCross.value);
+  private final JoystickButton kTriangle = new JoystickButton(m_Controller, PS4Controller.Button.kTriangle.value);
+  private final JoystickButton kR1 = new JoystickButton(m_Controller,PS4Controller.Button.kR1.value);
+  private final JoystickButton kR2 = new JoystickButton(m_Controller,PS4Controller.Button.kR2.value);
+  private final JoystickButton kL1 = new JoystickButton(m_Controller,PS4Controller.Button.kL1.value);
+  private final JoystickButton kL2 = new JoystickButton(m_Controller,PS4Controller.Button.kL2.value);
+  
+
+  // private final CommandXboxController m_driverController =
+  //     new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -71,6 +93,19 @@ public class RobotContainer {
     //kCircle.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
     //kCross.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn));
 
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+
+    // kTriangle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kSource));   // don't need states right now, just manual to test 
+    // kCross.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kProccessor));
+    // kCircle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_1));
+    // kSquare.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_2));
+
+    kR1.whileTrue(new MoveElevator(m_elevatorSubsystem, 5));
+    kL1.whileTrue(new MoveElevator(m_elevatorSubsystem, -1));
+    kCircle.onTrue(new ResetElevatorPosition(m_elevatorSubsystem));
+    kTriangle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kRest));
+    kSquare.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kSource));
+    kCross.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kL2));
   }
 
   /**
