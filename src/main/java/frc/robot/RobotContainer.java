@@ -5,9 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.MoveElevatorManual;
+import frc.robot.commands.MoveElevator;
 import frc.robot.commands.SetElevatorState;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -66,8 +64,8 @@ public class RobotContainer {
     // kCircle.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_1));
     // kSquare.onTrue(new SetElevatorState(m_elevatorSubsystem, ElevatorStates.kCoral_2));
 
-    kR1.whileTrue(new MoveElevatorManual(m_elevatorSubsystem, 0.1));
-    kR2.whileTrue(new MoveElevatorManual(m_elevatorSubsystem, -0.1));
+    kR1.whileTrue(new MoveElevator(m_elevatorSubsystem, 0.1));
+    kR2.whileTrue(new MoveElevator(m_elevatorSubsystem, -0.1));
   }
 
   /**

@@ -29,15 +29,11 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kSource(0), // needed to test for these values
-      kProccessor(0),
-      kCoral_1(0),
-      kCoral_2(0),
-      kCoral_3(0),
-      kCoral_4(0),
-      kAlgae_2(0),
-      kAlgae_3(0);
+      kProcessor(0),
+      kL1(0),
+      kL2(0),
+      kL3(0);
 
-      
       private double elevatorSetPoint;
 
       private ElevatorStates(double elevatorSetPoint) {
@@ -47,8 +43,6 @@ public final class Constants {
       public double getElevatorSetPoint(){
         return elevatorSetPoint;
       }
-
-
     }
 
   

@@ -44,8 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
   PIDController m_ElevatorPidController;
 
-  ElevatorFeedforward m_leftElevatorFeedforward;
-  ElevatorFeedforward m_rightElevatorFeedforward;
+  ElevatorFeedforward m_elevatorFF;
 
   TrapezoidProfile trapezoidProfile;
   TrapezoidProfile.State goalState;
@@ -53,8 +52,8 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   // ElevatorFeedforward feedforward;
 
   public ElevatorSubsystem() {
-    m_rightMotor = new SparkMax(0, MotorType.kBrushless); // NEED PORT # Later
-    m_leftMotor = new SparkMax(0, MotorType.kBrushless);
+    m_rightMotor = new SparkMax(7, MotorType.kBrushless); // NEED PORT # Later
+    m_leftMotor = new SparkMax(8, MotorType.kBrushless);
     elevatorEncoder = m_rightMotor.getEncoder();
 
     // m_desiredSetPoint = 0;
@@ -63,12 +62,10 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
     m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
 
-    m_leftElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
-    m_rightElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
+    m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
+    // m_rightElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
 
     trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0, 0)); 
-    goalState = new TrapezoidProfile.State(0,0); //test for values
-    setpointState = new TrapezoidProfile.State(0,0);
 
     configureMotors();
 
@@ -98,15 +95,13 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_ElevatorPidController.calculate(elevatorEncoder.getPosition(), state.position);
   }
 
-
-
   public ElevatorStates getElevatorState() {
     return m_state;
   }
 
   public void setMotorSpeed(double speed){ // need to test which motor needs the negative
     m_rightMotor.set(speed);
-    m_leftMotor.set(-speed);
+    m_leftMotor.set(speed);
   }
 
   public void stopMotor() {
@@ -114,19 +109,9 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_leftMotor.set(0);
   }
 
-  public void setMotorFeedForward(double speed){
-    m_rightMotor.setVoltage(m_rightElevatorFeedforward.calculate(speed));
-    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(-speed));
-  }
-
   public void setElevatorVoltage(double voltage) {
     m_rightMotor.setVoltage(voltage);
     m_leftMotor.setVoltage(voltage);
-  }
-
-  public void setElevatorVoltageBySpeed(double speed) {
-    m_rightMotor.setVoltage(m_rightElevatorFeedforward.calculate(speed));
-    m_leftMotor.setVoltage(m_leftElevatorFeedforward.calculate(speed));
   }
 
   public double getElevatorEncoder() {
@@ -139,25 +124,13 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
  
   public void setElevatorPID(){
     m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
-    m_leftMotor.set(-MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
-  }
-
-  public double getMotorVelocity() {
-    return elevatorEncoder.getVelocity();
-  }
-
-  public double getElevatorVoltage() {
-    return m_leftMotor.getBusVoltage();
+    m_leftMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
   }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //setSpeed(m_ElevatorPidController.calculate(getEncoder(), m_desiredSetPoint));
     SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
-    SmartDashboard.putNumber("Elevator Voltage", getElevatorVoltage());
-    SmartDashboard.putNumber("Elevator Speed", getMotorVelocity());
-    SmartDashboard.putNumber("Elevator PID", getElevatorPID());
 
   }
 }
