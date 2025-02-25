@@ -51,22 +51,22 @@ public final class Constants {
   }
 
   public static class AlgaeConstants {
-    public static final int kPivotPort = 0;
+    public static final int kPivotPort = 6;
     public static final double kP = 0.001;
     
-    public static final int kIntakePortL = 1;
-    public static final int kIntakePortR = 3;
+    public static final int kIntakePortL = 4;
+    public static final int kIntakePortR = 5;
 
     public static final double intakeKS = 0;
     public static final double intakeKV = 0;
     public static final double intakeKA = 0;
     
-    public static final double pivotKG = 0;
+    public static final double pivotKG = 2.5;
   
     
     public enum AlgaeStates{
-      kOut(2),
-      kIn(3);
+      kOut(0.25),
+      kIn(0);
 
       private double kPivotPos;
 

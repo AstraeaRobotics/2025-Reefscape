@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -12,7 +13,9 @@ import frc.robot.commands.ExampleCommand;
 // import frc.robot.commands.Coral.L1Test;
 import frc.robot.commands.Coral.MoveCoralPivot;
 import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetPivotVoltage;
+import frc.robot.commands.algae.SetState;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -45,6 +48,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
     configureBindings();
   }
 
@@ -58,13 +62,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
-    // kTriangle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
-    // kCross.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest));
-    // kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 0.3));
+    kr1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
+    kl1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    // kCircle.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, 8));
 
-    // kr1.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, 0.1));
-    // kl1.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, -0.1));
+    kCircle.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
+    kCross.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn));
+
   }
 
   /**

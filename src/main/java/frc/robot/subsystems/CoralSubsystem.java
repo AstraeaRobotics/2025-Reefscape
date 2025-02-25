@@ -24,8 +24,8 @@ import frc.robot.Constants.CoralConstants.CoralStates;
 
 public class CoralSubsystem extends SubsystemBase {
   /** Creates a new CoralSubsystem. */
-  // SparkMax coralLeftIntakeMotor;
-  // SparkMax coralRightIntakeMotor;
+  SparkMax coralLeftIntakeMotor;
+  SparkMax coralRightIntakeMotor;
   SparkMax coralPivotMotor;
 
   AbsoluteEncoder coralPivotEncoder;
@@ -42,12 +42,12 @@ public class CoralSubsystem extends SubsystemBase {
   SimpleMotorFeedforward m_coralRightIntakeFeedforward;
   
   public CoralSubsystem() {
-    // coralLeftIntakeMotor = new SparkMax(1, MotorType.kBrushless); // TO DO - put actual device motor IDs
-    // coralRightIntakeMotor = new SparkMax(2, MotorType.kBrushless); 
-    coralPivotMotor = new SparkMax(2, MotorType.kBrushless);
+    coralLeftIntakeMotor = new SparkMax(1, MotorType.kBrushless); // TO DO - put actual device motor IDs
+    coralRightIntakeMotor = new SparkMax(2, MotorType.kBrushless); 
+    coralPivotMotor = new SparkMax(3, MotorType.kBrushless);
 
-    // coralLeftIntakeEncoder = coralLeftIntakeMotor.getEncoder();
-    // coralRightIntakeEncoder = coralRightIntakeMotor.getEncoder();
+    coralLeftIntakeEncoder = coralLeftIntakeMotor.getEncoder();
+    coralRightIntakeEncoder = coralRightIntakeMotor.getEncoder();
     coralPivotEncoder = coralPivotMotor.getAbsoluteEncoder();
 
     m_coralState = CoralStates.kRest;
@@ -55,8 +55,8 @@ public class CoralSubsystem extends SubsystemBase {
 
     m_coralPidController = new PIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
 
-    // m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
-    // m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
+    m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
+    m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
     m_coralPivotFeedforward = new ArmFeedforward(0, CoralConstants.coralPivotkG, 0, 0);
     configureMotors();
   }
@@ -65,34 +65,34 @@ public class CoralSubsystem extends SubsystemBase {
     coralPivotMotor.set(speed);
   }
 
-  // public void setCoralLeftIntakeFeedForward(double speed){
-  //   coralLeftIntakeMotor.setVoltage(m_coralLeftIntakeFeedforward.calculate(speed));         
-  // }
+  public void setCoralLeftIntakeFeedForward(double speed){
+    coralLeftIntakeMotor.setVoltage(m_coralLeftIntakeFeedforward.calculate(speed));         
+  }
 
-  // public void setCoralRightIntakeFeedForward(double speed){
-  //   coralRightIntakeMotor.setVoltage(m_coralRightIntakeFeedforward.calculate(speed));         
-  // }
+  public void setCoralRightIntakeFeedForward(double speed){
+    coralRightIntakeMotor.setVoltage(m_coralRightIntakeFeedforward.calculate(speed));         
+  }
 
-  // public void setCoralPivotFeedForward(double position, double speed){
-  //   coralPivotMotor.setVoltage(getCoralPivotFeedForward(position, speed));         
-  // }
+  public void setCoralPivotFeedForward(double position, double speed){
+    coralPivotMotor.setVoltage(getCoralPivotFeedForward(position, speed));         
+  }
 
-  // public double getCoralPivotFeedForward(double position, double speed){
-  //   return m_coralPivotFeedforward.calculate(position, speed);
-  // }
+  public double getCoralPivotFeedForward(double position, double speed){
+    return m_coralPivotFeedforward.calculate(position, speed);
+  }
 
-  // public void setLeftVoltage(double voltage){
-  //   coralLeftIntakeMotor.setVoltage(voltage);         
-  // }
+  public void setLeftVoltage(double voltage){
+    coralLeftIntakeMotor.setVoltage(voltage);         
+  }
 
-  // public void setRightVoltage(double voltage){
-  //   coralRightIntakeMotor.setVoltage(voltage);         
-  // }
+  public void setRightVoltage(double voltage){
+    coralRightIntakeMotor.setVoltage(voltage);         
+  }
 
-  // public void setIntakeVoltage(double voltage) {
-  //   setLeftVoltage(voltage);
-  //   setRightVoltage(voltage);
-  // }
+  public void setIntakeVoltage(double voltage) {
+    setLeftVoltage(voltage);
+    setRightVoltage(voltage);
+  }
 
   public void setPivotVoltage(double voltage){
     coralPivotMotor.setVoltage(voltage);         
@@ -148,7 +148,6 @@ public class CoralSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral encoder value", getPivotEncoder());
-    SmartDashboard.putNumber("Coral desired setpoint", coralSetpoint);
     SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
     // coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
   }
