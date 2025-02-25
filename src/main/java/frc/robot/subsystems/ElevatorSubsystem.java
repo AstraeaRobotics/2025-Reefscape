@@ -47,17 +47,16 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   ElevatorFeedforward m_elevatorFF;
 
   TrapezoidProfile trapezoidProfile;
-  TrapezoidProfile.State goalState;
-  TrapezoidProfile.State setpointState;
+
   // ElevatorFeedforward feedforward;
 
   public ElevatorSubsystem() {
-    m_rightMotor = new SparkMax(7, MotorType.kBrushless); // NEED PORT # Later
+    m_rightMotor = new SparkMax(7, MotorType.kBrushless);
     m_leftMotor = new SparkMax(8, MotorType.kBrushless);
-    elevatorEncoder = m_rightMotor.getEncoder();
+    elevatorEncoder = m_leftMotor.getEncoder();
 
     // m_desiredSetPoint = 0;
-    m_state = ElevatorStates.kSource; // dont have or need states right now
+    m_state = ElevatorStates.kRest; // dont have or need states right now
     m_SetPoint = m_state.getElevatorSetPoint();
 
     m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
@@ -65,7 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
     // m_rightElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
 
-    trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0, 0)); 
+    trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(2, .7)); 
 
     configureMotors();
 
@@ -80,19 +79,13 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
     m_leftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_rightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    resetPosition();
   }
 
   public void setElevatorState(ElevatorStates tempState){
     m_state = tempState;
     m_SetPoint = m_state.getElevatorSetPoint();
-  }
-
-  public TrapezoidProfile.State setTrapezoidState(double sec, TrapezoidProfile.State startState, TrapezoidProfile.State endState) {
-    return trapezoidProfile.calculate(sec, startState, endState); // starts at startState, ends at endState, retturns motion profile state after the number of sec inputed
-  }
-
-  public void movetoTrapezoidState(TrapezoidProfile.State state) {
-    m_ElevatorPidController.calculate(elevatorEncoder.getPosition(), state.position);
   }
 
   public ElevatorStates getElevatorState() {
@@ -126,11 +119,18 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
     m_leftMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
   }
+
+  public void resetPosition() {
+    elevatorEncoder.setPosition(0);
+  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
-
+    SmartDashboard.putNumber("PID OUTPUT", m_elevatorFF.calculate(0) + getElevatorPID());
+    SmartDashboard.putNumber("setpoint", m_SetPoint);
+    // setElevatorVoltage(m_elevatorFF.calculate(0));
+    setElevatorVoltage(MathUtil.clamp(m_elevatorFF.calculate(0) + getElevatorPID(), -4, 6.5));
   }
 }

@@ -28,13 +28,13 @@ public class MoveElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ElevatorSubsystem.setMotorSpeed(speed);
+    m_ElevatorSubsystem.setElevatorVoltage(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ElevatorSubsystem.stopMotor();
+    m_ElevatorSubsystem.setElevatorVoltage(0);
   }
 
   // Returns true when the command should end.
