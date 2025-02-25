@@ -6,8 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.CoralConstants.CoralStates;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+
 // import frc.robot.commands.Coral.IntakeCoral;
 // import frc.robot.commands.Coral.L1Test;
 import frc.robot.commands.Coral.MoveCoralPivot;
