@@ -73,14 +73,6 @@ public class CoralSubsystem extends SubsystemBase {
     coralRightIntakeMotor.setVoltage(m_coralRightIntakeFeedforward.calculate(speed));         
   }
 
-  public void setCoralPivotFeedForward(double position, double speed){
-    coralPivotMotor.setVoltage(getCoralPivotFeedForward(position, speed));         
-  }
-
-  public double getCoralPivotFeedForward(double position, double speed){
-    return m_coralPivotFeedforward.calculate(position, speed);
-  }
-
   public void setLeftVoltage(double voltage){
     coralLeftIntakeMotor.setVoltage(voltage);         
   }
@@ -115,11 +107,11 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public double getEncoderFF() {
-    return 2 * Math.PI * getPivotEncoder() - Math.PI / 2;
+    return 2 * Math.PI * getPivotEncoder();
   }
 
   public double getPivotOutput() {
-    return getPivotPID() + m_coralPivotFeedforward.calculate(coralSetpoint * 2 * Math.PI - (Math.PI/2), 0);
+    return -getPivotPID() + m_coralPivotFeedforward.calculate(coralSetpoint * 2 * Math.PI, 0);
   }
 
   public void setPivotPID(){
@@ -149,6 +141,8 @@ public class CoralSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral encoder value", getPivotEncoder());
     SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
-    // coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
+    SmartDashboard.putNumber("coral setpoint", coralSetpoint);
+    SmartDashboard.putNumber("ff output", getEncoderFF());
+    coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
   }
 }

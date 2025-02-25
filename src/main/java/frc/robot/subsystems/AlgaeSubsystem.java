@@ -147,6 +147,6 @@ public class AlgaeSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("pivot output", m_pivot.getOutputCurrent());
 
-    setPivot();
+    // setPivot();
   }
 }

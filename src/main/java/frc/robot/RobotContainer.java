@@ -62,12 +62,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    kr1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
-    kl1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    kr1.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kSource));
+    kl1.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
+    // kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 3));
+    kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
     // kCircle.whileTrue(new SetPivotVoltage(m_AlgaeSubsystem, 8));
 
-    kCircle.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
-    kCross.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn));
+    //kCircle.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
+    //kCross.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn));
 
   }
 
