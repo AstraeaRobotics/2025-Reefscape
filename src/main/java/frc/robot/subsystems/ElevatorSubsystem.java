@@ -6,9 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -24,6 +21,9 @@ import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
+import frc.robot.Constants.ElevatorConstants.ElevatorStates;
+import frc.robot.Constants.ElevatorConstants;
 
 //import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.MathUtil;

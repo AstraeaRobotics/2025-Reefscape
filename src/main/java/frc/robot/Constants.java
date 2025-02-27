@@ -34,9 +34,9 @@ public final class Constants {
     public enum CoralStates{
       kRest(0.823),
       kL1(.027),  //TO DO - find encoder values
-      kL2(.961),
+      kL2(.98),
       kL3(0.961),
-      kSource(0.823);
+      kSource(0.85);
       private double coralSetpoint;
 
       private CoralStates(double coralSetpoint){
@@ -77,6 +77,7 @@ public final class Constants {
         return kPivotPos;
       }
     }
+  }
   public static class ElevatorConstants{
     //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
     public static final double kEncoderConversionFactor = 2*Math.PI;
