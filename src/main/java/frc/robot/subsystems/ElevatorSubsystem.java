@@ -103,7 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   }
 
   public void setElevatorVoltage(double voltage) {
-    m_rightMotor.setVoltage(voltage);
+    m_rightMotor.setVoltage(0);
     m_leftMotor.setVoltage(voltage);
   }
 

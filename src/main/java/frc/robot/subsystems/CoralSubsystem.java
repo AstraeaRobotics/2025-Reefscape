@@ -16,7 +16,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CoralConstants;
@@ -35,7 +37,7 @@ public class CoralSubsystem extends SubsystemBase {
   CoralStates m_coralState;
   double coralSetpoint;
 
-  PIDController m_coralPidController;
+  ProfiledPIDController m_coralPidController;
   
   ArmFeedforward m_coralPivotFeedforward;
   SimpleMotorFeedforward m_coralLeftIntakeFeedforward;
@@ -53,7 +55,7 @@ public class CoralSubsystem extends SubsystemBase {
     m_coralState = CoralStates.kRest;
     coralSetpoint = m_coralState.getCoralSetpoint();
 
-    m_coralPidController = new PIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
+    m_coralPidController = new ProfiledPIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD, new TrapezoidProfile.Constraints(10.0, 15.0));
 
     m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
     m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
@@ -124,14 +126,14 @@ public class CoralSubsystem extends SubsystemBase {
     SparkMaxConfig rightIntakeConfig = new SparkMaxConfig();
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
 
-    pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kCoast).inverted(false);
-    leftIntakeConfig.smartCurrentLimit(35);
-    rightIntakeConfig.smartCurrentLimit(35).inverted(true);
+    pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kBrake).inverted(false);
+    leftIntakeConfig.smartCurrentLimit(25).idleMode(IdleMode.kCoast);
+    rightIntakeConfig.smartCurrentLimit(25).inverted(true).idleMode(IdleMode.kCoast);
 
     m_coralPidController.enableContinuousInput(0,1);
 
-    // coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     coralPivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -143,6 +145,6 @@ public class CoralSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
     SmartDashboard.putNumber("coral setpoint", coralSetpoint);
     SmartDashboard.putNumber("ff output", getEncoderFF());
-    coralPivotMotor.set(MathUtil.clamp(getPivotOutput(), -.3, .3));
+    coralPivotMotor.setVoltage(MathUtil.clamp(getPivotOutput(), -5, 5));
   }
 }

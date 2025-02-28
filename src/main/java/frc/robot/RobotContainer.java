@@ -4,30 +4,25 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.AlgaeConstants.AlgaeStates;
-import frc.robot.Constants.CoralConstants.CoralStates;
-import frc.robot.commands.Coral.IntakeCoral;
-// import frc.robot.commands.Coral.IntakeCoral;
-// import frc.robot.commands.Coral.L1Test;
-import frc.robot.commands.Coral.MoveCoralPivot;
-import frc.robot.commands.Coral.SetCoralState;
-import frc.robot.commands.algae.IntakeAlgae;
-import frc.robot.commands.algae.SetPivotVoltage;
-import frc.robot.commands.algae.SetState;
-import frc.robot.subsystems.AlgaeSubsystem;
-import frc.robot.subsystems.CoralSubsystem;
-import frc.robot.commands.MoveElevator;
-import frc.robot.commands.ResetElevatorPosition;
-import frc.robot.commands.SetElevatorState;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.Constants.AlgaeConstants.AlgaeStates;
+import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
+import frc.robot.commands.Coral.IntakeCoral;
+import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.algae.IntakeAlgae;
+import frc.robot.commands.algae.SetState;
+import frc.robot.commands.elevator.MoveElevator;
+import frc.robot.commands.elevator.ResetElevatorPosition;
+import frc.robot.commands.elevator.SetElevatorState;
+import frc.robot.subsystems.*;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -37,10 +32,24 @@ import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CoralSubsystem m_coralSubsystem = new CoralSubsystem();
-  // private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
+  private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+
   private final PS4Controller m_Controller = new PS4Controller(0);
+  public static final GenericHID operatorGamepad = new GenericHID(1);
+
+  public static final JoystickButton kOperator1 = new JoystickButton(operatorGamepad, 1);
+  public static final JoystickButton kOperator2 = new JoystickButton(operatorGamepad, 2);
+  public static final JoystickButton kOperator3 = new JoystickButton(operatorGamepad, 3);
+  public static final JoystickButton kOperator4 = new JoystickButton(operatorGamepad, 4);
+  public static final JoystickButton kOperator5 = new JoystickButton(operatorGamepad, 5);
+  public static final JoystickButton kOperator6 = new JoystickButton(operatorGamepad, 6);
+  public static final JoystickButton kOperator7 = new JoystickButton(operatorGamepad, 7);
+  public static final JoystickButton kOperator8 = new JoystickButton(operatorGamepad, 8);
+  public static final JoystickButton kOperator9 = new JoystickButton(operatorGamepad, 9);
+  public static final JoystickButton kOperator10 = new JoystickButton(operatorGamepad, 10);
+  public static final JoystickButton kOperator11 = new JoystickButton(operatorGamepad, 11);
+  public static final JoystickButton kOperator12 = new JoystickButton(operatorGamepad, 12);
 
   private final JoystickButton kCircle = new JoystickButton(m_Controller,PS4Controller.Button.kCircle.value);
   private final JoystickButton kSquare = new JoystickButton(m_Controller, PS4Controller.Button.kSquare.value);
@@ -59,6 +68,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
+    // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
     configureBindings();
   }
 
@@ -72,19 +82,26 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // kR1.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kSource));
-    // kR2.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL1));
-    // kr1.whileTrue(new MoveCoralPivot(m_coralSubsystem, 3));
-    // kCircle.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kL2));
+    // kL1.whileTrue(new MoveElevator(m_ElevatorSubsystem, 5));
+    // kR1.whileTrue(new MoveElevator(m_ElevatorSubsystem, -1));
+    kL1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    kL2.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
 
-    // kR1.whileTrue(new MoveElevator(m_ElevatorSubsystem, 5));
-    // kL1.whileTrue(new MoveElevator(m_ElevatorSubsystem, -1));
-    kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
-    kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kCircle.onTrue(new ResetElevatorPosition(m_ElevatorSubsystem));
-    kTriangle.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest)));
-    kSquare.onTrue(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource));
-    kCross.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kL2)));
+    // Cross is for zeroing swerve gyro
+
+    kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // R
+    kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource))); // SRC
+    kOperator3.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1), new SetCoralState(m_coralSubsystem, CoralStates.kL1))); // CL1
+    kOperator4.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetCoralState(m_coralSubsystem, CoralStates.kL2))); // Cl2
+    kOperator5.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetCoralState(m_coralSubsystem, CoralStates.kL3))); // Cl3
+    kOperator6.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest)); // CR
+    kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL1), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
+    kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl2), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
+    kOperator9.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn)); // AR
+    kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
+    kOperator11.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+
   }
 
   /**
