@@ -17,6 +17,7 @@ import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 import frc.robot.commands.Coral.IntakeCoral;
 import frc.robot.commands.Coral.SetCoralState;
 import frc.robot.commands.algae.IntakeAlgae;
+import frc.robot.commands.algae.SetPivotVoltage;
 import frc.robot.commands.algae.SetState;
 import frc.robot.commands.elevator.MoveElevator;
 import frc.robot.commands.elevator.ResetElevatorPosition;
@@ -32,7 +33,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CoralSubsystem m_coralSubsystem = new CoralSubsystem();
-  // private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
+  private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
   private final PS4Controller m_Controller = new PS4Controller(0);
@@ -83,23 +84,23 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    kL1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
-    kL2.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
+    kL1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    kR1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
 
     kCircle.onTrue(new ResetElevatorPosition(m_ElevatorSubsystem));
     // Cross is for zeroing swerve gyro
 
-    kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // R
-    kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource))); // SRC
-    kOperator3.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1), new SetCoralState(m_coralSubsystem, CoralStates.kL1))); // CL1
-    kOperator4.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetCoralState(m_coralSubsystem, CoralStates.kL2))); // Cl2
-    kOperator5.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetCoralState(m_coralSubsystem, CoralStates.kL3))); // Cl3
-    kOperator6.onTrue(new SetCoralState(m_coralSubsystem, CoralStates.kRest)); // CR
-    // kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL1), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
-    // kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl2), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
-    // kOperator9.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kIn)); // AR
-    // kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
-    // kOperator11.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+    kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetState(m_AlgaeSubsystem, AlgaeStates.kIn))); // R
+    kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource), new SetState(m_AlgaeSubsystem, AlgaeStates.kIn))); // SRC
+    kOperator3.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1), new SetCoralState(m_coralSubsystem, CoralStates.kL1), new SetState(m_AlgaeSubsystem, AlgaeStates.kIn))); // CL1
+    kOperator4.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetCoralState(m_coralSubsystem, CoralStates.kL2), new SetState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl2
+    kOperator5.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetCoralState(m_coralSubsystem, CoralStates.kL3), new SetState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl3
+    kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
+    kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
+    kOperator8.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
+    kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+
+    // kOperator7.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
 
   }
 

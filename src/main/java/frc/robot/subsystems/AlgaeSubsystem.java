@@ -11,11 +11,14 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
@@ -33,7 +36,7 @@ public class AlgaeSubsystem extends SubsystemBase {
   private final RelativeEncoder m_intakeEncoder;
   
 
-  private final PIDController m_pid;
+  private final ProfiledPIDController m_pid;
   private final SimpleMotorFeedforward m_intakeFeedForward;
   private final ArmFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
@@ -45,7 +48,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     m_intakeL = new SparkMax(AlgaeConstants.kIntakePortL, MotorType.kBrushless);
     m_intakeR = new SparkMax(AlgaeConstants.kIntakePortR, MotorType.kBrushless);
 
-    m_pid = new PIDController(1.6, 0, 0);
+    m_pid = new ProfiledPIDController(15.0, 0, 1, new TrapezoidProfile.Constraints(10, 15));
     m_pivotEncoder = m_pivot.getAbsoluteEncoder();
     
     m_intakeEncoder = m_intakeL.getEncoder();
@@ -68,7 +71,7 @@ public class AlgaeSubsystem extends SubsystemBase {
 
     SparkMaxConfig configPivot = new SparkMaxConfig();
     
-    configPivot.smartCurrentLimit(60);
+    configPivot.smartCurrentLimit(35).idleMode(IdleMode.kBrake);
     // configPivot.closedLoopRampRate(10);
 
     m_pivot.configure(configPivot, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -145,8 +148,7 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("pivot output", m_pivot.getOutputCurrent());
-
-    // setPivot();
+    SmartDashboard.putNumber("pid output", getPivotOutput());
+    setPivot();
   }
 }
