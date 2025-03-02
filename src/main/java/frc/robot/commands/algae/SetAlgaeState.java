@@ -12,10 +12,10 @@ import frc.robot.subsystems.AlgaeSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SetState extends InstantCommand {
+public class SetAlgaeState extends InstantCommand {
   AlgaeSubsystem  m_AlgaeSubsystem;
   AlgaeStates m_algaeState;
-  public SetState(AlgaeSubsystem m_AlgaeSubsystem, AlgaeStates m_algaeState) {
+  public SetAlgaeState(AlgaeSubsystem m_AlgaeSubsystem, AlgaeStates m_algaeState) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_AlgaeSubsystem = m_AlgaeSubsystem;
     this.m_algaeState = m_algaeState;

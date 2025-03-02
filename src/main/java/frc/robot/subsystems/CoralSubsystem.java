@@ -63,6 +63,24 @@ public class CoralSubsystem extends SubsystemBase {
     configureMotors();
   }
 
+  private void configureMotors(){
+
+    SparkMaxConfig pivotConfig = new SparkMaxConfig();
+    SparkMaxConfig rightIntakeConfig = new SparkMaxConfig();
+    SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
+
+    pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kBrake).inverted(false);
+    leftIntakeConfig.smartCurrentLimit(25).idleMode(IdleMode.kCoast);
+    rightIntakeConfig.smartCurrentLimit(25).inverted(true).idleMode(IdleMode.kCoast);
+
+    m_coralPidController.enableContinuousInput(0,1);
+
+    coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    coralPivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+
   public void setCoralPivotMotor(double speed){
     coralPivotMotor.set(speed);
   }
@@ -113,30 +131,12 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   public double getPivotOutput() {
-    return -getPivotPID() + m_coralPivotFeedforward.calculate(coralSetpoint * 2 * Math.PI, 0);
+    return (MathUtil.clamp(-getPivotPID() + m_coralPivotFeedforward.calculate(coralSetpoint * 2 * Math.PI, 0), -6, 6));
   }
 
   public void setPivotPID(){
     coralPivotMotor.set(MathUtil.clamp(getPivotPID(),-0.5,0.5));
   }
-
-  private void configureMotors(){
-
-    SparkMaxConfig pivotConfig = new SparkMaxConfig();
-    SparkMaxConfig rightIntakeConfig = new SparkMaxConfig();
-    SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
-
-    pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kBrake).inverted(false);
-    leftIntakeConfig.smartCurrentLimit(25).idleMode(IdleMode.kCoast);
-    rightIntakeConfig.smartCurrentLimit(25).inverted(true).idleMode(IdleMode.kCoast);
-
-    m_coralPidController.enableContinuousInput(0,1);
-
-    coralLeftIntakeMotor.configure(leftIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    coralRightIntakeMotor.configure(rightIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    coralPivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
 
   @Override
   public void periodic() {
@@ -144,6 +144,6 @@ public class CoralSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
     SmartDashboard.putNumber("Coral encoder value", getPivotEncoder());
     SmartDashboard.putNumber("coral setpoint", coralSetpoint);
-    coralPivotMotor.setVoltage(MathUtil.clamp(getPivotOutput(), -6, 6));
+    coralPivotMotor.setVoltage(getPivotOutput());
   }
 }

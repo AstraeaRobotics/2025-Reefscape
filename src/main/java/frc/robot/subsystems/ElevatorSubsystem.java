@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;
@@ -38,11 +39,11 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   // RelativeEncoder m_Encoder;
   
   ElevatorStates m_state;
-  double m_SetPoint;
+  double m_setpoint;
 
   RelativeEncoder elevatorEncoder;
 
-  PIDController m_ElevatorPidController;
+  ProfiledPIDController m_ElevatorPidController;
 
   ElevatorFeedforward m_elevatorFF;
 
@@ -55,19 +56,13 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_leftMotor = new SparkMax(8, MotorType.kBrushless);
     elevatorEncoder = m_leftMotor.getEncoder();
 
-    // m_desiredSetPoint = 0;
     m_state = ElevatorStates.kRest; // dont have or need states right now
-    m_SetPoint = m_state.getElevatorSetPoint();
+    m_setpoint = m_state.getElevatorSetPoint();
 
-    m_ElevatorPidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
-
+    m_ElevatorPidController = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(10, 15));
     m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
-    // m_rightElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
-
-    trapezoidProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(2, .7)); 
 
     configureMotors();
-
   }
 
   public void configureMotors() {
@@ -85,14 +80,14 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
   public void setElevatorState(ElevatorStates tempState){
     m_state = tempState;
-    m_SetPoint = m_state.getElevatorSetPoint();
+    m_setpoint = MathUtil.clamp(m_state.getElevatorSetPoint(), 1, 45);
   }
 
   public ElevatorStates getElevatorState() {
     return m_state;
   }
 
-  public void setMotorSpeed(double speed){ // need to test which motor needs the negative
+  public void setMotorSpeed(double speed){
     m_rightMotor.set(speed);
     m_leftMotor.set(speed);
   }
@@ -112,7 +107,11 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   }
 
   public double getElevatorPID() {
-    return m_ElevatorPidController.calculate(getElevatorEncoder(), m_SetPoint);
+    return m_ElevatorPidController.calculate(getElevatorEncoder(), m_setpoint);
+  }
+
+  public double getElevatorOutput() {
+    return MathUtil.clamp(getElevatorPID() + m_elevatorFF.calculate(0), -4, 6.5);
   }
  
   public void setElevatorPID(){
@@ -128,9 +127,9 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
-    SmartDashboard.putNumber("PID OUTPUT", m_elevatorFF.calculate(0) + getElevatorPID());
-    SmartDashboard.putNumber("setpoint", m_SetPoint);
+    SmartDashboard.putNumber("setpoint", m_setpoint);
+    SmartDashboard.putNumber("Elevator output", getElevatorOutput());
     // setElevatorVoltage(m_elevatorFF.calculate(0));
-    setElevatorVoltage(MathUtil.clamp(m_elevatorFF.calculate(0) + getElevatorPID(), -4, 6.5));
+    setElevatorVoltage(getElevatorOutput());
   }
 }
