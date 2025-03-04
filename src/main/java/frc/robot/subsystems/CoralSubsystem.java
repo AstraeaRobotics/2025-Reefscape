@@ -55,7 +55,7 @@ public class CoralSubsystem extends SubsystemBase {
     m_coralState = CoralStates.kRest;
     coralSetpoint = m_coralState.getCoralSetpoint();
 
-    m_coralPidController = new ProfiledPIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD, new TrapezoidProfile.Constraints(10.0, 15.0));
+    m_coralPidController = new ProfiledPIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD, new TrapezoidProfile.Constraints(10.0, 12.5));
 
     m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
     m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
@@ -141,8 +141,7 @@ public class CoralSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral pivot output", getPivotOutput());
-    SmartDashboard.putNumber("Coral encoder value", getPivotEncoder());
+    SmartDashboard.putNumber("Coral encoder position", getPivotEncoder());
     SmartDashboard.putNumber("coral setpoint", coralSetpoint);
     coralPivotMotor.setVoltage(getPivotOutput());
   }

@@ -19,7 +19,7 @@ public final class Constants {
   public static class CoralConstants {
     public static final double kP = 13.0; // TO DO - tune PID - 1.2
     public static final double kI = 0.0;
-    public static final double kD = 0.0; // 0.25
+    public static final double kD = 1.0; // 0.25
 
     //feed forward constants 
     public static final double coralIntakekS = 0.0;//TO DO - find feed forward values
@@ -27,14 +27,14 @@ public final class Constants {
     public static final double coralIntakekA = 0.0;
 
     public static final double coralPivotkS = 0.0;
-    public static final double coralPivotkG = 0.52; // 0.045
+    public static final double coralPivotkG = 0.57; // 0.045
     public static final double coralPivotkV = 0.0;
     public static final double coralPivotkA = 0.0;
 
     public enum CoralStates{
       kRest(0.823),
       kL1(0),  //TO DO - find encoder values
-      kL2(.96),
+      kL2(.99),
       kL3(0.925),
       kSource(0.83);
       private double coralSetpoint;
@@ -60,7 +60,7 @@ public final class Constants {
     public static final double intakeKV = 0;
     public static final double intakeKA = 0;
     
-    public static final double pivotKG = 0.97;
+    public static final double pivotKG = 1.5;
   
     
     public enum AlgaeStates{
@@ -81,7 +81,7 @@ public final class Constants {
   public static class ElevatorConstants{
     //public static final double kEncoderConversionFactor = 2 *Math.PI * 2;
     public static final double kEncoderConversionFactor = 2*Math.PI;
-    public static final double kP = 0.5;
+    public static final double kP = 1.4;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kS = 0;

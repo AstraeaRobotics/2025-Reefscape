@@ -48,7 +48,7 @@ public class AlgaeSubsystem extends SubsystemBase {
     m_intakeL = new SparkMax(AlgaeConstants.kIntakePortL, MotorType.kBrushless);
     m_intakeR = new SparkMax(AlgaeConstants.kIntakePortR, MotorType.kBrushless);
 
-    m_pid = new ProfiledPIDController(15.0, 0, 1, new TrapezoidProfile.Constraints(10, 15));
+    m_pid = new ProfiledPIDController(27.0, 0, 4.0, new TrapezoidProfile.Constraints(1, 0.5));
     m_pivotEncoder = m_pivot.getAbsoluteEncoder();
     
     m_intakeEncoder = m_intakeL.getEncoder();
@@ -148,6 +148,8 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Algae position", getPivotAngle());
+    SmartDashboard.putNumber("Algae desired setpoint", desiredSetpoint);
     SmartDashboard.putNumber("pid output", getPivotOutput());
     setPivot();
   }

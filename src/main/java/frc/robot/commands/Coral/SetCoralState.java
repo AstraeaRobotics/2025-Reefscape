@@ -13,17 +13,18 @@ import frc.robot.subsystems.CoralSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetCoralState extends InstantCommand {
   CoralSubsystem m_CoralSubsystem;
-  CoralStates m_CoralState;
-  public SetCoralState(CoralSubsystem m_CoralSubsystem,CoralStates m_CoralStates ) {
-    this.m_CoralSubsystem = m_CoralSubsystem;
-    this.m_CoralState = m_CoralStates;
+  CoralStates m_coralState;
+  public SetCoralState(CoralSubsystem m_CoralSubsystem, CoralStates m_coralState) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.m_CoralSubsystem = m_CoralSubsystem;
+    this.m_coralState = m_coralState;
+
     addRequirements(m_CoralSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_CoralSubsystem.setState(m_CoralState);
+    m_CoralSubsystem.setState(m_coralState);
   }
 }

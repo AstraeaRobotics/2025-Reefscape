@@ -14,9 +14,10 @@ public class IntakeCoral extends Command {
   double voltage;
 
   public IntakeCoral(CoralSubsystem m_CoralSubsystem, double voltage) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.m_CoralSubsystem = m_CoralSubsystem;
     this.voltage = voltage;
-    // Use addRequirements() here to declare subsystem dependencies.
+
     addRequirements(m_CoralSubsystem);
   }
 

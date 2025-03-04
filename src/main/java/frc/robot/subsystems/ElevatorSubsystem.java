@@ -59,7 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     m_state = ElevatorStates.kRest; // dont have or need states right now
     m_setpoint = m_state.getElevatorSetPoint();
 
-    m_ElevatorPidController = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(10, 15));
+    m_ElevatorPidController = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, new TrapezoidProfile.Constraints(100, 150));
     m_elevatorFF = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kA);
 
     configureMotors();
@@ -126,10 +126,8 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Encoder Position", getElevatorEncoder());
-    SmartDashboard.putNumber("setpoint", m_setpoint);
-    SmartDashboard.putNumber("Elevator output", getElevatorOutput());
-    // setElevatorVoltage(m_elevatorFF.calculate(0));
+    SmartDashboard.putNumber("Elevator Position", getElevatorEncoder());
+    SmartDashboard.putNumber("Elevator setpoint", m_setpoint);
     setElevatorVoltage(getElevatorOutput());
   }
 }
