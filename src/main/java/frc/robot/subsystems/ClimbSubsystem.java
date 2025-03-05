@@ -31,7 +31,7 @@ public class ClimbSubsystem extends SubsystemBase {
   
   Slot0Configs m_climbConfigs;
   PositionVoltage m_climbPosition;
-  VelocityVoltage m_climbVelocity;
+  // VelocityVoltage m_climbVelocity;
   ClimbStates m_climbState;
   double desiredSetpoint;
   Limelight m_Limelight;
@@ -41,7 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbConfigs = new Slot0Configs();
     //configureMotors();
     m_climbPosition = new PositionVoltage(0).withSlot(0);
-    m_climbVelocity = new VelocityVoltage(0).withSlot(0);
+    // m_climbVelocity = new VelocityVoltage(0).withSlot(0);
     
     m_climbState = ClimbStates.kTop;
     desiredSetpoint = m_climbState.getClimbSetpoint();
@@ -65,12 +65,12 @@ public class ClimbSubsystem extends SubsystemBase {
   public double getClimbError() {
     return m_climbMotor.getClosedLoopError().getValueAsDouble();
   }
-  public void spinClimbMotorVelocity(double velocity) {
-    m_climbMotor.setControl(m_climbVelocity.withVelocity(velocity));
-  }
-  public double getClimbVelocity() {
-    return m_climbMotor.getVelocity().getValueAsDouble();
-  }
+  // public void spinClimbMotorVelocity(double velocity) {
+  //   m_climbMotor.setControl(m_climbVelocity.withVelocity(velocity));
+  // }
+  // public double getClimbVelocity() {
+  //   return m_climbMotor.getVelocity().getValueAsDouble();
+  // }
 
   public void setClimbState (ClimbStates tempState) {
     m_climbState = tempState;
@@ -89,7 +89,7 @@ public class ClimbSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
-    SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
+    // SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
     SmartDashboard.putNumber("Limelight TX", m_Limelight.getTx());
   }
 }
