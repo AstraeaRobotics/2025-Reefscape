@@ -14,9 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.algae.IntakeAlgae;
-import frc.robot.commands.algae.SetPivotVoltage;
-import frc.robot.commands.coral.*;
+import frc.robot.commands.Coral.IntakeCoral;
+import frc.robot.commands.Coral.SetCoralState;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
@@ -82,8 +81,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    kL1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
-    kR1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
+    // kL1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    // kR1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
 
     kCircle.onTrue(new ResetElevatorPosition(m_ElevatorSubsystem));
     // Cross is for zeroing swerve gyro
