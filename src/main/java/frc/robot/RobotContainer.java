@@ -19,6 +19,7 @@ import frc.robot.commands.Coral.SetCoralState;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
+import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.*;
 
 /**
@@ -29,6 +30,7 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
   private final CoralSubsystem m_coralSubsystem = new CoralSubsystem();
   private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
@@ -67,6 +69,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
     // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
+    m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, null, null, null, null));
     configureBindings();
   }
 
