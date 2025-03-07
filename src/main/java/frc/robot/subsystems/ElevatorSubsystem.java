@@ -33,7 +33,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   /** Creates a new ElevatorSubsystem. */
-  SparkMax m_rightMotor;
+  // SparkMax m_rightMotor;
   SparkMax m_leftMotor;
 
   // RelativeEncoder m_Encoder;
@@ -52,8 +52,8 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   // ElevatorFeedforward feedforward;
 
   public ElevatorSubsystem() {
-    m_rightMotor = new SparkMax(7, MotorType.kBrushless);
-    m_leftMotor = new SparkMax(8, MotorType.kBrushless);
+    // m_rightMotor = new SparkMax(7, MotorType.kBrushless);
+    m_leftMotor = new SparkMax(7, MotorType.kBrushless);
     elevatorEncoder = m_leftMotor.getEncoder();
 
     m_state = ElevatorStates.kRest; // dont have or need states right now
@@ -73,7 +73,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
     rightConfig.smartCurrentLimit(35).closedLoopRampRate(8);
 
     m_leftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_rightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // m_rightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     resetPosition();
   }
@@ -88,17 +88,17 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   }
 
   public void setMotorSpeed(double speed){
-    m_rightMotor.set(speed);
+    // m_rightMotor.set(speed);
     m_leftMotor.set(speed);
   }
 
   public void stopMotor() {
-    m_rightMotor.set(0);
+    // m_rightMotor.set(0);
     m_leftMotor.set(0);
   }
 
   public void setElevatorVoltage(double voltage) {
-    m_rightMotor.setVoltage(0);
+    // m_rightMotor.setVoltage(0);
     m_leftMotor.setVoltage(voltage);
   }
 
@@ -115,7 +115,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   }
  
   public void setElevatorPID(){
-    m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
+    // m_rightMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
     m_leftMotor.set(MathUtil.clamp(getElevatorPID(), -0.8, 0.8));
   }
 
