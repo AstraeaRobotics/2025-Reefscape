@@ -5,10 +5,10 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+// import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.config.PIDConstants;
+// import com.pathplanner.lib.config.RobotConfig;
+// import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -42,43 +42,43 @@ public class SwerveSubsystem extends SubsystemBase {
   StructPublisher<Pose2d> publisher;
   StructPublisher<Pose2d> arrayPublisher;
 
-  RobotConfig config;
+  // RobotConfig config;
 
   public SwerveSubsystem() {
     kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
     gyro = new AHRS();
 
     swerveModules = new SwerveModule[4];
-    swerveModules[0] = new SwerveModule(2, 1, 180, "front left");
-    swerveModules[1] = new SwerveModule(4, 3, 0, "front right");
-    swerveModules[2] = new SwerveModule(6, 5, 180, "back left");
-    swerveModules[3] = new SwerveModule(8, 7, 180, "back right");
+    swerveModules[0] = new SwerveModule(12, 11, 0, "front left");
+    swerveModules[1] = new SwerveModule(14, 13, 0, "front right");
+    swerveModules[2] = new SwerveModule(16, 15, 0, "back left");
+    swerveModules[3] = new SwerveModule(18, 17, 0, "back right");
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
     
-    try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
+    // try{
+    //   config = RobotConfig.fromGUISettings();
+    // } catch (Exception e) {
+    //   // Handle exception as needed
+    //   e.printStackTrace();
+    // }
 
-    AutoBuilder.configure(
-      this::getPose, 
-      this::resetRobotPose, 
-      this::getRobotRelativeSpeeds, 
-      (speeds, feedforwards) -> drive(speeds, true), 
-      new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0.1)), 
-      config,
-      () -> {
-      // var alliance = DriverStation.getAlliance();
-      // if (alliance.isPresent()) {
-      //   return alliance.get() == DriverStation.Alliance.Red;
-      // }
-      return false;
-    },
-    this);
+    // AutoBuilder.configure(
+    //   this::getPose, 
+    //   this::resetRobotPose, 
+    //   this::getRobotRelativeSpeeds, 
+    //   (speeds, feedforwards) -> drive(speeds, true), 
+    //   new PPHolonomicDriveController(new PIDConstants(2.1, 0, 0), new PIDConstants(2.0, 0, 0.1)), 
+    //   config,
+    //   () -> {
+    //   // var alliance = DriverStation.getAlliance();
+    //   // if (alliance.isPresent()) {
+    //   //   return alliance.get() == DriverStation.Alliance.Red;
+    //   // }
+    //   return false;
+    // },
+    // this);
 
     gyro.reset();
   }

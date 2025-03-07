@@ -53,7 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
 
   public ElevatorSubsystem() {
     // m_rightMotor = new SparkMax(7, MotorType.kBrushless);
-    m_leftMotor = new SparkMax(7, MotorType.kBrushless);
+    m_leftMotor = new SparkMax(8, MotorType.kBrushless);
     elevatorEncoder = m_leftMotor.getEncoder();
 
     m_state = ElevatorStates.kRest; // dont have or need states right now

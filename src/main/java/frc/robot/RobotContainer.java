@@ -14,11 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.Coral.IntakeCoral;
-import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.coral.IntakeCoral;
+import frc.robot.commands.coral.SetCoralState;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
+import frc.robot.commands.swerve.ResetGyro;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.*;
 
@@ -69,7 +70,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
     // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
-    m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, null, null, null, null));
+    m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, m_Controller::getLeftX, m_Controller::getLeftY, m_Controller::getRightX, m_Controller::getR2Axis));
     configureBindings();
   }
 
@@ -89,6 +90,7 @@ public class RobotContainer {
 
     kCircle.onTrue(new ResetElevatorPosition(m_ElevatorSubsystem));
     // Cross is for zeroing swerve gyro
+    kCross.onTrue(new ResetGyro(m_SwerveSubsystem));
 
     kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // R
     kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // SRC
