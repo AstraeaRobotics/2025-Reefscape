@@ -125,6 +125,7 @@ public class SwerveModule extends SubsystemBase {
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
     driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1], slowMode));
     // driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
+    // driveMotor.setVoltage(slowMode ? (driveFF.calculate(optimizedModule[1]) / 2) : (driveFF.calculate(optimizedModule[1])));
   }
 
   @Override
