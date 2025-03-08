@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.coral.IntakeCoral;
-import frc.robot.commands.coral.SetCoralState;
+import frc.robot.commands.Coral.IntakeCoral;
+import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
 import frc.robot.commands.swerve.ResetGyro;
+import frc.robot.commands.swerve.SetModuleVoltage;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.*;
 
@@ -88,7 +90,7 @@ public class RobotContainer {
     // kL1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
     // kR1.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
 
-    kCircle.onTrue(new ResetElevatorPosition(m_ElevatorSubsystem));
+    kCircle.whileTrue(new SetModuleVoltage(m_SwerveSubsystem, 0.45));
     // Cross is for zeroing swerve gyro
     kCross.onTrue(new ResetGyro(m_SwerveSubsystem));
 
@@ -97,10 +99,14 @@ public class RobotContainer {
     kOperator3.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1), new SetCoralState(m_coralSubsystem, CoralStates.kL1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // CL1
     kOperator4.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetCoralState(m_coralSubsystem, CoralStates.kL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl2
     kOperator5.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetCoralState(m_coralSubsystem, CoralStates.kL3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl3
-    kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
-    kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
-    kOperator8.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
-    kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+    kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
+    kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
+    kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kOut), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
+    kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
+    kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+    kOperator11.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
+    kOperator12.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+
 
     // kOperator7.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
 

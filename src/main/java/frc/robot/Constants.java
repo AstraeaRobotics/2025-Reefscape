@@ -93,13 +93,14 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kRest(0),
-      kSource(8.8), // needed to test for these values
+      kSource(10), // needed to test for these values
       kProcessor(21),
       kCL1(8.8),
       kCL2(24),
       kCL3(42),
-      kAL1(0),
-      kAl2(0);
+      kAl1(10),
+      kAL2(26),
+      kAl3(43);
 
 
       private double elevatorSetPoint;
@@ -144,7 +145,18 @@ public final class Constants {
 
   public static class DrivebaseConstants {
     // Physical constants
-    public static final double kWheelBase = Units.inchesToMeters(20);/* the distance between the front and rear wheels */
-    public static final double kTrackWidth = Units.inchesToMeters(22); /* the distance between left and right wheels */
+  
+   
+    // public static final double kWheelBase = Units.inchesToMeters(20);/* the distance between the front and rear wheels */
+    // public static final double kTrackWidth = Units.inchesToMeters(22); /* the distance between left and right wheels */
+
+     /* ^^^^^
+        lyra  
+      */
+
+    
+    // 2025 nameless bot constants
+    public static final double kWheelBase = Units.inchesToMeters(26.125);
+    public static final double kTrackWidth = Units.inchesToMeters(23.75);
   }
 }

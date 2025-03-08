@@ -42,7 +42,6 @@ public class SwerveModule extends SubsystemBase {
 
   private SwerveModuleState moduleState;
 
-
   public SwerveModule(int turnMotorID, int driveMotorID, int angularOffset, String moduleName) {
     turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
@@ -66,7 +65,7 @@ public class SwerveModule extends SubsystemBase {
     configureMotors();
   }
 
-  private void configureMotors() {
+  public void configureMotors() {
     turnPIDController.enableContinuousInput(0, 360);
 
     turnMotorConfig
@@ -126,6 +125,15 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1], slowMode));
     // driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
     // driveMotor.setVoltage(slowMode ? (driveFF.calculate(optimizedModule[1]) / 2) : (driveFF.calculate(optimizedModule[1])));
+  }
+
+  public double getVelocity() {
+    return driveEncoder.getVelocity();
+  }
+
+  public void setModuleVoltage(double voltage) {
+    turnMotor.set(-turnPIDController.calculate(getAngle(), 0));
+    driveMotor.setVoltage(voltage);
   }
 
   @Override
