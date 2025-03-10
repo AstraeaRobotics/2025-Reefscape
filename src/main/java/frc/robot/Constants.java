@@ -37,7 +37,7 @@ public final class Constants {
       kRest(0.823),
       kL1(0),  //TO DO - find encoder values
       kL2(.99),
-      kL3(0.925),
+      kL3(0.95),
       kSource(0.83);
       private double coralSetpoint;
 
@@ -66,7 +66,8 @@ public final class Constants {
   
     
     public enum AlgaeStates{
-      kOut(0.25),
+      kL2(0.25),
+      kL3(0.35),
       kIn(0);
 
       private double kPivotPos;
@@ -87,7 +88,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kS = 0;
-    public static final double kG = 0.33; // mass of elevator * accel of gravity
+    public static final double kG = 0.33;
     public static final double kV = 0;
     public static final double kA = 0;
     
@@ -95,9 +96,9 @@ public final class Constants {
       kRest(0),
       kSource(10), // needed to test for these values
       kProcessor(21),
-      kCL1(8.8),
-      kCL2(24),
-      kCL3(42),
+      kCL1(4),
+      kCL2(23),
+      kCL3(43.5),
       kAl1(10),
       kAL2(26),
       kAl3(43);
@@ -158,5 +159,7 @@ public final class Constants {
     // 2025 nameless bot constants
     public static final double kWheelBase = Units.inchesToMeters(26.125);
     public static final double kTrackWidth = Units.inchesToMeters(23.75);
+    public static final double kAutoSpeedMultiplier = 0.5;
+
   }
 }

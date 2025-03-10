@@ -58,10 +58,10 @@ public class SwerveSubsystem extends SubsystemBase {
     gyro = new AHRS();
 
     swerveModules = new SwerveModule[4];
-    swerveModules[0] = new SwerveModule(12, 11, 180, "front left");
-    swerveModules[1] = new SwerveModule(14, 13, 0, "front right");
-    swerveModules[2] = new SwerveModule(16, 15, 180, "back left");
-    swerveModules[3] = new SwerveModule(18, 17, 180, "back right");
+    swerveModules[0] = new SwerveModule(12, 11, 0, "front left", true);
+    swerveModules[1] = new SwerveModule(14, 13, 0, "front right", false);
+    swerveModules[2] = new SwerveModule(16, 15, 0, "back left", true);
+    swerveModules[3] = new SwerveModule(18, 17, 0, "back right", true);
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
@@ -139,10 +139,14 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
   }
 
-  public void setModuleVoltages(double voltage) {
+  public void resetEncoders() {
     for(int i = 0; i < swerveModules.length; i++) {
-      swerveModules[i].setModuleVoltage(voltage);
+      swerveModules[i].resetEncoder();
     }
+  }
+
+  public double getEncoderPosition() {
+    return swerveModules[0].getDistance();
   }
 
   @Override

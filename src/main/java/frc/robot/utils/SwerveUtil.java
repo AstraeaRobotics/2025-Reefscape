@@ -32,4 +32,12 @@ public class SwerveUtil {
     public static ChassisSpeeds driveInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {
         return ChassisSpeeds.fromFieldRelativeSpeeds(-driveY, -driveX, -rotation, Rotation2d.fromDegrees(-heading));
     }
+
+    public static ChassisSpeeds autoInputToChassisSpeeds(double driveX, double driveY, double rotation, double heading) {
+        return ChassisSpeeds.fromRobotRelativeSpeeds(-driveY, -driveX, -rotation, Rotation2d.fromDegrees(heading));
+    }
+
+    public static double driftCorrection(double ogYaw, double currentYaw) {
+        return ((currentYaw - ogYaw) / (180)) * Math.PI * 0.0;
+    }
 }

@@ -13,11 +13,14 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseModuleConstants;
@@ -42,7 +45,9 @@ public class SwerveModule extends SubsystemBase {
 
   private SwerveModuleState moduleState;
 
-  public SwerveModule(int turnMotorID, int driveMotorID, int angularOffset, String moduleName) {
+  private Boolean isInverted;
+
+  public SwerveModule(int turnMotorID, int driveMotorID, int angularOffset, String moduleName, Boolean isInverted) {
     turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
 
@@ -60,7 +65,9 @@ public class SwerveModule extends SubsystemBase {
 
     this.moduleState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
-    driveFF = new SimpleMotorFeedforward(0.11, 0.45);
+    this.isInverted = isInverted;
+
+    driveFF = new SimpleMotorFeedforward(0.25, 6.6);
 
     configureMotors();
   }
@@ -83,20 +90,23 @@ public class SwerveModule extends SubsystemBase {
     driveMotorConfig
     .closedLoopRampRate(8)
     .smartCurrentLimit(35)
-    .idleMode(IdleMode.kBrake);
+    .idleMode(IdleMode.kBrake)
+    .inverted(isInverted);
     driveMotorConfig.encoder
     .positionConversionFactor(DrivebaseModuleConstants.kDriveEncoderPositionFactor)
     .velocityConversionFactor(DrivebaseModuleConstants.kDriveEncoderVelocityFactor);
-
-
-    driveEncoder.setPosition(0);
     
-    driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    resetEncoder();
 
+    driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public double getDistance(){
     return driveEncoder.getPosition();
+  }
+
+  public void resetEncoder() {
+    driveEncoder.setPosition(0);
   }
 
   public double getAngle() {
@@ -122,23 +132,16 @@ public class SwerveModule extends SubsystemBase {
     double[] optimizedModule = SwerveUtil.optimizeModule(getAngle(), moduleState.angle.getDegrees() + 180, moduleState.speedMetersPerSecond);
 
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
-    driveMotor.setVoltage(SwerveUtil.getModuleVoltage(optimizedModule[1], slowMode));
-    // driveMotor.setVoltage(driveFF.calculate(optimizedModule[1]));
-    // driveMotor.setVoltage(slowMode ? (driveFF.calculate(optimizedModule[1]) / 2) : (driveFF.calculate(optimizedModule[1])));
+    driveMotor.setVoltage(MathUtil.clamp(slowMode ? driveFF.calculate(optimizedModule[1] / 2) : driveFF.calculate(optimizedModule[1]), -6, 6));
+
   }
 
   public double getVelocity() {
     return driveEncoder.getVelocity();
   }
 
-  public void setModuleVoltage(double voltage) {
-    turnMotor.set(-turnPIDController.calculate(getAngle(), 0));
-    driveMotor.setVoltage(voltage);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("module angle", getAngle());
   }
 }
