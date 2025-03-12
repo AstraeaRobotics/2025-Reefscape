@@ -38,6 +38,6 @@ public class SwerveUtil {
     }
 
     public static double driftCorrection(double ogYaw, double currentYaw) {
-        return ((currentYaw - ogYaw) / (180)) * Math.PI * 0.0;
+        return ((currentYaw) / (180)) * Math.PI * 0.1;
     }
 }

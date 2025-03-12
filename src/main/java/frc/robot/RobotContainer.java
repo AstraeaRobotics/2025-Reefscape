@@ -14,18 +14,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.Coral.IntakeCoral;
-import frc.robot.commands.Coral.SetCoralState;
+import frc.robot.commands.coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.auto.components.coral.ScoreL1;
-import frc.robot.commands.auto.components.drivebase.DriveToDistance;
-import frc.robot.commands.auto.components.drivebase.TurnToAngle;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
 import frc.robot.commands.swerve.ResetGyro;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.*;
+import frc.robot.commands.auto.components.drivebase.*;
+import frc.robot.commands.auto.paths.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -95,18 +94,21 @@ public class RobotContainer {
     // kCircle.whileTrue(new SetModuleVoltage(m_SwerveSubsystem,4.0));
     // Cross is for zeroing swerve gyro
     kCross.onTrue(new ResetGyro(m_SwerveSubsystem));
-    kCircle.onTrue(new DriveToDistance(m_SwerveSubsystem, 0, 2.24));
+    // kCircle.onTrue(new TurnWheelsAndDrive(m_SwerveSubsystem, 0.1, 1));
+    // kTriangle.onTrue(new L1A2Mid(m_ElevatorSubsystem, m_AlgaeSubsystem, m_SwerveSubsystem, m_coralSubsystem));
+    kTriangle.onTrue(new L2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem));
 
     kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // R
     kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // SRC
     kOperator3.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1), new SetCoralState(m_coralSubsystem, CoralStates.kL1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // CL1
     kOperator4.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2), new SetCoralState(m_coralSubsystem, CoralStates.kL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl2
     kOperator5.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL3), new SetCoralState(m_coralSubsystem, CoralStates.kL3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // Cl3
-    kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
+    kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL1), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
     kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
     kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL3
     kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
-    kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+    // kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
+    kOperator10.whileTrue(new ExtakeL1(m_coralSubsystem));
     kOperator11.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5)); // EA
     kOperator12.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5)); // IA
 

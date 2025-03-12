@@ -18,15 +18,19 @@ public class DriveToDistance extends Command {
   private double m_ydistanceToTravel;
   private double angle;
   private double initialYaw;
-  private PIDController xController = new PIDController(.576, 0, 0.00005);
-  private PIDController yController = new PIDController(.576, 0, 0.05);
+  private double desiredHeading;
+  // private PIDController xController = new PIDController(.576, 0, 0.00005);
+  // private PIDController yController = new PIDController(.576, 0, 0.05);
   private double xDriveSpeed;
   private double yDriveSpeed;
 
-  public DriveToDistance(SwerveSubsystem swerveSubsystem, double xdistanceToTravel, double yDistanceToTravel) {
+  private PIDController rotationController;
+
+  public DriveToDistance(SwerveSubsystem swerveSubsystem, double xdistanceToTravel, double yDistanceToTravel, double desiredHeading) {
     this.m_swerveSubsystem = swerveSubsystem;
     this.m_xdistanceToTravel = xdistanceToTravel;
     this.m_ydistanceToTravel = yDistanceToTravel;
+    this.desiredHeading = desiredHeading;
     addRequirements(swerveSubsystem);
   }
 
@@ -35,16 +39,18 @@ public class DriveToDistance extends Command {
     this.m_swerveSubsystem.resetEncoders();
     initialYaw = this.m_swerveSubsystem.getHeading();
     this.angle = Math.atan2(this.m_ydistanceToTravel, this.m_xdistanceToTravel);
-    this.xController.setSetpoint(Math.abs(this.m_xdistanceToTravel));
-    this.xController.setTolerance(0.01);
-    this.yController.setSetpoint(Math.abs(this.m_ydistanceToTravel));
-    this.yController.setTolerance(0.01);
+    // this.xController.setSetpoint(Math.abs(this.m_xdistanceToTravel));
+    // this.xController.setTolerance(0.01);
+    // this.yController.setSetpoint(Math.abs(this.m_ydistanceToTravel));
+    // this.yController.setTolerance(0.01);
     //SmartDashboard.putNumber("Angle: ", angle);
-    double speedMultiplier = 1;
-    if (m_ydistanceToTravel >= 0) speedMultiplier = 0.5;
-    else speedMultiplier = 1;
-    // xDriveSpeed = (0.05 * m_xdistanceToTravel + 0.7) * Math.signum(m_xdistanceToTravel) * DrivebaseConstants.kAutoSpeedMultiplier;
-    // yDriveSpeed = (0.05 * m_ydistanceToTravel + 0.7) * Math.signum(-m_ydistanceToTravel) * DrivebaseConstants.kAutoSpeedMultiplier * speedMultiplier;
+
+    rotationController = new PIDController(0.03, 0, 0);
+    rotationController.enableContinuousInput(0, 360);
+    double speedMultiplier = 0.5;
+
+    xDriveSpeed = (0.05 * m_xdistanceToTravel + 0.7) * Math.signum(m_xdistanceToTravel) * DrivebaseConstants.kAutoSpeedMultiplier * speedMultiplier;
+    yDriveSpeed = (0.05 * m_ydistanceToTravel + 0.7) * Math.signum(-m_ydistanceToTravel) * DrivebaseConstants.kAutoSpeedMultiplier * speedMultiplier;
 
   }
 
@@ -52,10 +58,10 @@ public class DriveToDistance extends Command {
   public void execute() {
     // -1, error = 0.05
     if (this.m_xdistanceToTravel == 0) {
-      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(0, yDriveSpeed, SwerveUtil.driftCorrection(initialYaw, this.m_swerveSubsystem.getHeading()), m_swerveSubsystem.getHeading()), false);  
+      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(0, yDriveSpeed, rotationController.calculate(this.m_swerveSubsystem.getHeading(), desiredHeading), m_swerveSubsystem.getHeading()), false);  
     } 
     else if (this.m_ydistanceToTravel == 0) {
-      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, 0, SwerveUtil.driftCorrection(initialYaw, this.m_swerveSubsystem.getHeading()), m_swerveSubsystem.getHeading()), false);
+      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, 0, rotationController.calculate(this.m_swerveSubsystem.getHeading(), desiredHeading), m_swerveSubsystem.getHeading()), false);
     } 
     else {
       this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, yDriveSpeed, SwerveUtil.driftCorrection(initialYaw, this.m_swerveSubsystem.getHeading()), m_swerveSubsystem.getHeading()), false);
@@ -63,6 +69,7 @@ public class DriveToDistance extends Command {
 
     // SmartDashboard.putNumber("Encoder Position X: ", this.m_swerveSubsystem.getEncoderPosition() * Math.cos(angle));
     // SmartDashboard.putNumber("Encoder Position Y: ", this.m_swerveSubsystem.getEncoderPosition() * Math.sin(angle));
+    // SmartDashboard.putNumber("drift output", rotationController.calculate(this.m_swerveSubsystem.getHeading(), 0));
   }
 
   @Override
@@ -73,8 +80,8 @@ public class DriveToDistance extends Command {
   @Override
   public boolean isFinished() {
     return 
-      Math.abs(this.m_swerveSubsystem.getEncoderPosition() * Math.sin(angle)) >= Math.abs(this.m_xdistanceToTravel)
+      Math.abs(this.m_swerveSubsystem.getEncoderPosition() * Math.sin(angle)) >= Math.abs(this.m_ydistanceToTravel)
       &&
-      Math.abs(this.m_swerveSubsystem.getEncoderPosition() * Math.cos(angle)) >= Math.abs(this.m_ydistanceToTravel);
+      Math.abs(this.m_swerveSubsystem.getEncoderPosition() * Math.cos(angle)) >= Math.abs(this.m_xdistanceToTravel);
   }
 }
