@@ -135,14 +135,14 @@ public final class Constants {
         public static final double turnKI = 0;
         public static final double turnKD = 0;
 
-        public static final double driveKP = 0.01;
-        public static final double driveKI = 0;
-        public static final double driveKD = 0;
+        // public static final double driveKP = 0.01;
+        // public static final double driveKI = 0;
+        // public static final double driveKD = 0;
 
         // FeedForward Constants
         // public static final double turnKV = 0.00005; // 0.31
         public static final double driveKV = 6.5; // 6.5
-        public static final double driveKS = 0;
+        public static final double driveKS = 0.25;
   }
 
   public static class DrivebaseConstants {

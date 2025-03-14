@@ -15,11 +15,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CoralConstants;
 import frc.robot.Constants.CoralConstants.CoralStates;
@@ -40,8 +37,6 @@ public class CoralSubsystem extends SubsystemBase {
   ProfiledPIDController m_coralPidController;
   
   ArmFeedforward m_coralPivotFeedforward;
-  SimpleMotorFeedforward m_coralLeftIntakeFeedforward;
-  SimpleMotorFeedforward m_coralRightIntakeFeedforward;
   
   public CoralSubsystem() {
     coralLeftIntakeMotor = new SparkMax(1, MotorType.kBrushless); // TO DO - put actual device motor IDs
@@ -55,10 +50,8 @@ public class CoralSubsystem extends SubsystemBase {
     m_coralState = CoralStates.kRest;
     coralSetpoint = m_coralState.getCoralSetpoint();
 
-    m_coralPidController = new ProfiledPIDController(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD, new TrapezoidProfile.Constraints(10.0, 12.5));
+    m_coralPidController = new ProfiledPIDController(CoralConstants.kP, 0, CoralConstants.kD, new TrapezoidProfile.Constraints(10.0, 12.5));
 
-    m_coralLeftIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
-    m_coralRightIntakeFeedforward = new SimpleMotorFeedforward(CoralConstants.coralIntakekS, CoralConstants.coralIntakekV, CoralConstants.coralIntakekA);
     m_coralPivotFeedforward = new ArmFeedforward(0, CoralConstants.coralPivotkG, 0, 0);
     configureMotors();
   }
@@ -70,8 +63,8 @@ public class CoralSubsystem extends SubsystemBase {
     SparkMaxConfig leftIntakeConfig = new SparkMaxConfig();
 
     pivotConfig.smartCurrentLimit(35).idleMode(IdleMode.kBrake).inverted(false);
-    leftIntakeConfig.smartCurrentLimit(25).idleMode(IdleMode.kCoast);
-    rightIntakeConfig.smartCurrentLimit(25).inverted(true).idleMode(IdleMode.kCoast);
+    leftIntakeConfig.smartCurrentLimit(20).idleMode(IdleMode.kCoast);
+    rightIntakeConfig.smartCurrentLimit(20).inverted(true).idleMode(IdleMode.kCoast);
 
     m_coralPidController.enableContinuousInput(0,1);
 
@@ -83,14 +76,6 @@ public class CoralSubsystem extends SubsystemBase {
 
   public void setCoralPivotMotor(double speed){
     coralPivotMotor.set(speed);
-  }
-
-  public void setCoralLeftIntakeFeedForward(double speed){
-    coralLeftIntakeMotor.setVoltage(m_coralLeftIntakeFeedforward.calculate(speed));         
-  }
-
-  public void setCoralRightIntakeFeedForward(double speed){
-    coralRightIntakeMotor.setVoltage(m_coralRightIntakeFeedforward.calculate(speed));         
   }
 
   public void setLeftVoltage(double voltage){

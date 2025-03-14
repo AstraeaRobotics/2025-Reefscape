@@ -19,9 +19,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseModuleConstants;
 import frc.robot.utils.SwerveUtil;
@@ -55,7 +52,6 @@ public class SwerveModule extends SubsystemBase {
     driveMotorConfig = new SparkMaxConfig();
 
     turnPIDController = new PIDController(DrivebaseModuleConstants.turnKP, 0, 0);
-    // drivePIDController = driveMotor.getPIDController();
 
     turnEncoder = turnMotor.getAbsoluteEncoder();
     driveEncoder = driveMotor.getEncoder();
@@ -66,8 +62,10 @@ public class SwerveModule extends SubsystemBase {
     this.moduleState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
     this.isInverted = isInverted;
+    // ks - 0.25
+    // kv - 6.6
 
-    driveFF = new SimpleMotorFeedforward(0.25, 6.6);
+    driveFF = new SimpleMotorFeedforward(DrivebaseModuleConstants.driveKS, DrivebaseModuleConstants.driveKV);
 
     configureMotors();
   }
@@ -133,7 +131,6 @@ public class SwerveModule extends SubsystemBase {
 
     turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
     driveMotor.setVoltage(MathUtil.clamp(slowMode ? driveFF.calculate(optimizedModule[1] / 2) : driveFF.calculate(optimizedModule[1]), -6, 6));
-
   }
 
   public double getVelocity() {
