@@ -126,8 +126,8 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Position", getElevatorEncoder());
-    SmartDashboard.putNumber("Elevator setpoint", m_setpoint);
+    // SmartDashboard.putNumber("Elevator Position", getElevatorEncoder());
+    // SmartDashboard.putNumber("Elevator setpoint", m_setpoint);
     setElevatorVoltage(getElevatorOutput());
   }
 }

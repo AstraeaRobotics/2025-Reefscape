@@ -54,9 +54,6 @@ public class TeleopSwerve extends Command {
     else{
       m_SwerveSubsystem.drive(SwerveUtil.driveInputToChassisSpeeds(0, 0, 0, m_SwerveSubsystem.getHeading()), slowMode);
     }
-
-    SmartDashboard.putBoolean("slowMode", slowMode);
-    SmartDashboard.putNumber("r2", r2Axis.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

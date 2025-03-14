@@ -148,9 +148,9 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Algae position", getPivotAngle());
-    SmartDashboard.putNumber("Algae desired setpoint", desiredSetpoint);
-    SmartDashboard.putNumber("pid output", getPivotOutput());
+    // SmartDashboard.putNumber("Algae position", getPivotAngle());
+    // SmartDashboard.putNumber("Algae desired setpoint", desiredSetpoint);
+    // SmartDashboard.putNumber("pid output", getPivotOutput());
     setPivot();
   }
 }

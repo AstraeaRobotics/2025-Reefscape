@@ -141,8 +141,8 @@ public class CoralSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral encoder position", getPivotEncoder());
-    SmartDashboard.putNumber("coral setpoint", coralSetpoint);
+    // SmartDashboard.putNumber("Coral encoder position", getPivotEncoder());
+    // SmartDashboard.putNumber("coral setpoint", coralSetpoint);
     coralPivotMotor.setVoltage(getPivotOutput());
   }
 }

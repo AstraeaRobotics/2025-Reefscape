@@ -98,6 +98,7 @@ public class RobotContainer {
 
     kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
+    kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
     kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
     kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
 
@@ -110,7 +111,7 @@ public class RobotContainer {
     kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
     kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL3
     kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
-    kOperator10.whileTrue(new ExtakeL1(m_coralSubsystem)); // EC
+    kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
     kOperator11.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5)); // EA
     kOperator12.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5)); // IA
 
@@ -126,6 +127,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return (new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem));
+    return null;
+    // return new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    // return new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    // return new LL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    // return new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    // return new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
   }
 }
