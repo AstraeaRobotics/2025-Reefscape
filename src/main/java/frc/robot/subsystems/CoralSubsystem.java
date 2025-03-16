@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -126,8 +127,8 @@ public class CoralSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Coral encoder position", getPivotEncoder());
-    // SmartDashboard.putNumber("coral setpoint", coralSetpoint);
+    SmartDashboard.putNumber("Coral encoder position", getPivotEncoder());
+    SmartDashboard.putNumber("coral setpoint", coralSetpoint);
     coralPivotMotor.setVoltage(getPivotOutput());
   }
 }

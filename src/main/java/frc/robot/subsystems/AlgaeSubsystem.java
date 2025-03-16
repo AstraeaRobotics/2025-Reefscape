@@ -23,6 +23,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
+
+// NetworkTableInstance defaultInst = NetworkTableInstance.getDefault();
 
 
 public class AlgaeSubsystem extends SubsystemBase {
@@ -41,26 +46,28 @@ public class AlgaeSubsystem extends SubsystemBase {
   private final ArmFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
   private double desiredSetpoint;
- 
-
+  
+  
   public AlgaeSubsystem() {
     m_pivot = new SparkMax(AlgaeConstants.kPivotPort, MotorType.kBrushless);
     m_intakeL = new SparkMax(AlgaeConstants.kIntakePortL, MotorType.kBrushless);
     m_intakeR = new SparkMax(AlgaeConstants.kIntakePortR, MotorType.kBrushless);
-
-    m_pid = new ProfiledPIDController(10.0, 0, 1.0, new TrapezoidProfile.Constraints(0.3, 0.8));
+    
+    //  14
+    m_pid = new ProfiledPIDController(16.0, 0, 1.0, new TrapezoidProfile.Constraints(0.4, 0.8));
     m_pivotEncoder = m_pivot.getAbsoluteEncoder();
     
     m_intakeEncoder = m_intakeL.getEncoder();
     m_intakeEncoder.setPosition(0);
 
     configMotors();
-
+    
     currState = AlgaeStates.kIn;
     desiredSetpoint = currState.getPivotPos();
-
+    
     m_intakeFeedForward = new SimpleMotorFeedforward(AlgaeConstants.intakeKS, AlgaeConstants.intakeKV, AlgaeConstants.intakeKA);
     m_pivotFeedforward = new ArmFeedforward(0, AlgaeConstants.pivotKG, 0);
+
   }
 
   private void configMotors(){
@@ -148,9 +155,9 @@ public class AlgaeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Algae position", getPivotAngle());
-    // SmartDashboard.putNumber("Algae desired setpoint", desiredSetpoint);
-    // SmartDashboard.putNumber("pid output", getPivotOutput());
+    SmartDashboard.putNumber("Algae position", getPivotAngle());
+    SmartDashboard.putNumber("Algae desired setpoint", desiredSetpoint);
+    SmartDashboard.putNumber("pid output", getPivotOutput());
     setPivot();
   }
 }

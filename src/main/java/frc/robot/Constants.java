@@ -36,9 +36,9 @@ public final class Constants {
     public enum CoralStates{
       kRest(0.823),
       kL1(0.97),  //TO DO - find encoder values
-      kL2(.99),
-      kL3(0.95),
-      kSource(0.9);
+      kL2(0),
+      kL3(0.96),
+      kSource(0.915);
       private double coralSetpoint;
 
       private CoralStates(double coralSetpoint){
@@ -95,13 +95,13 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kRest(0),
-      kSource(20), // needed to test for these values
+      kSource(22), // needed to test for these values
       kProcessor(21),
-      kCL1(5),
-      kCL2(20),
-      kCL3(43.5),
+      kCL1(3.5),
+      kCL2(21.5),
+      kCL3(45),
       kAl1(10),
-      kAL2(30),
+      kAL2(35),
       kAl3(43);
 
 

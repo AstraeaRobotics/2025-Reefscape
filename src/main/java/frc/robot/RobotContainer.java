@@ -6,10 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
@@ -18,9 +21,11 @@ import frc.robot.commands.coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.auto.components.coral.ScoreL1;
+import frc.robot.commands.elevator.IncrementSetpoint;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
 import frc.robot.commands.swerve.ResetGyro;
+import frc.robot.commands.swerve.StrafeRobotCentric;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.components.drivebase.*;
@@ -63,7 +68,18 @@ public class RobotContainer {
   private final JoystickButton kR2 = new JoystickButton(m_Controller,PS4Controller.Button.kR2.value);
   private final JoystickButton kL1 = new JoystickButton(m_Controller,PS4Controller.Button.kL1.value);
   private final JoystickButton kL2 = new JoystickButton(m_Controller,PS4Controller.Button.kL2.value);
-  
+
+  private final POVButton pov0 = new POVButton(m_Controller, 0);
+  private final POVButton pov90 = new POVButton(m_Controller, 90);
+  private final POVButton pov180 = new POVButton(m_Controller, 180);
+  private final POVButton pov270 = new POVButton(m_Controller, 270);
+
+
+  private final Command m_L1Mid = new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  private final Command m_RL1Side = new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  private final Command m_LL1Side = new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
   // private final CommandXboxController m_driverController =
   //     new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -73,6 +89,12 @@ public class RobotContainer {
     // Configure the trigger bindings
     // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
     // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
+    chooser.setDefaultOption("L1 Mid", m_L1Mid);
+    chooser.addOption("RL1 Side", m_RL1Side);
+    chooser.addOption("LL1 Side", m_LL1Side);
+
+    SmartDashboard.putData("Auto choices", chooser);
+
     m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, m_Controller::getLeftX, m_Controller::getLeftY, m_Controller::getRightX, m_Controller::getR2Axis));
     configureBindings();
   }
@@ -98,9 +120,15 @@ public class RobotContainer {
 
     kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
-    kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
+    // kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
+    kTriangle.onTrue(new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem));
     kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
     kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+
+    pov0.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2));
+    pov180.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2));
+    pov90.whileTrue(new StrafeRobotCentric(m_SwerveSubsystem, 1));
+    pov270.whileTrue(new StrafeRobotCentric(m_SwerveSubsystem, -1));
 
     kOperator1.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // R
     kOperator2.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kSource), new SetCoralState(m_coralSubsystem, CoralStates.kSource), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kIn))); // SRC
@@ -113,7 +141,8 @@ public class RobotContainer {
     kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
     kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
     kOperator11.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5)); // EA
-    kOperator12.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5)); // IA
+    // kOperator12.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5)); // IA
+    kOperator12.onTrue(new ResetGyro(m_SwerveSubsystem));
 
 
     // kOperator7.onTrue(new SetState(m_AlgaeSubsystem, AlgaeStates.kOut));
@@ -127,11 +156,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return chooser.getSelected();
     // return new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new LL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    
   }
 }

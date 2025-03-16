@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   // RelativeEncoder m_Encoder;
   
   ElevatorStates m_state;
-  double m_setpoint;
+  public double m_setpoint;
 
   RelativeEncoder elevatorEncoder;
 
@@ -127,7 +127,7 @@ public class ElevatorSubsystem extends SubsystemBase {// 2 neos
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Elevator Position", getElevatorEncoder());
-    // SmartDashboard.putNumber("Elevator setpoint", m_setpoint);
+    SmartDashboard.putNumber("Elevator setpoint", m_setpoint);
     setElevatorVoltage(getElevatorOutput());
   }
 }
