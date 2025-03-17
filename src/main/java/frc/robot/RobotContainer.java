@@ -75,11 +75,11 @@ public class RobotContainer {
   private final POVButton pov270 = new POVButton(m_Controller, 270);
 
 
-  private final Command m_L1Mid = new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
-  private final Command m_RL1Side = new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
-  private final Command m_LL1Side = new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  // private final Command m_L1Mid = new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  // private final Command m_RL1Side = new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  // private final Command m_LL1Side = new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
 
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  // SendableChooser<Command> chooser = new SendableChooser<>();
 
   // private final CommandXboxController m_driverController =
   //     new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -89,11 +89,11 @@ public class RobotContainer {
     // Configure the trigger bindings
     // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
     // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
-    chooser.setDefaultOption("L1 Mid", m_L1Mid);
-    chooser.addOption("RL1 Side", m_RL1Side);
-    chooser.addOption("LL1 Side", m_LL1Side);
+    // chooser.setDefaultOption("L1 Mid", m_L1Mid);
+    // chooser.addOption("RL1 Side", m_RL1Side);
+    // chooser.addOption("LL1 Side", m_LL1Side);
 
-    SmartDashboard.putData("Auto choices", chooser);
+    // SmartDashboard.putData("Auto choices", chooser);
 
     m_SwerveSubsystem.setDefaultCommand(new TeleopSwerve(m_SwerveSubsystem, m_Controller::getLeftX, m_Controller::getLeftY, m_Controller::getRightX, m_Controller::getR2Axis));
     configureBindings();
@@ -120,8 +120,7 @@ public class RobotContainer {
 
     kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
-    // kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
-    kTriangle.onTrue(new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem));
+    kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
     kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
     kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
 
@@ -156,12 +155,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return chooser.getSelected();
+    // return chooser.getSelected();
     // return new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new LL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     // return new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
-    // return new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+    return new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
     
   }
 }
