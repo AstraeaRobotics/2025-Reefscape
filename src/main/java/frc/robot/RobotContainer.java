@@ -23,14 +23,12 @@ import frc.robot.commands.coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.IncrementSetpoint;
-import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
 import frc.robot.commands.swerve.DriveRobotCentric;
 import frc.robot.commands.swerve.ResetGyro;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
-import frc.robot.commands.auto.components.drivebase.*;
 import frc.robot.commands.auto.paths.*;
 
 /**
@@ -81,6 +79,8 @@ public class RobotContainer {
   private final Command m_L1Mid = new L1Mid(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
   private final Command m_RL1Side = new RL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
   private final Command m_LL1Side = new LL1Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  private final Command m_RL2Side = new RL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
+  private final Command m_LL2Side = new LL2Side(m_SwerveSubsystem, m_coralSubsystem, m_ElevatorSubsystem);
 
 
   // private final CommandXboxController m_driverController =
@@ -88,12 +88,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    // m_AlgaeSubsystem.setDefaultCommand(new IntakeAlgae(m_AlgaeSubsystem, -.25));
-    // m_coralSubsystem.setDefaultCommand(new IntakeCoral(m_coralSubsystem, -0.3));
     chooser.setDefaultOption("L1 Mid", m_L1Mid);
     chooser.addOption("RL1 Side", m_RL1Side);
     chooser.addOption("LL1 Side", m_LL1Side);
+    chooser.addOption("RL2 Side", m_RL2Side);
+    chooser.addOption("LL2Side", m_LL2Side);
 
     SmartDashboard.putData("Auto choices", chooser);
 
