@@ -14,19 +14,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DrivebaseConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 import frc.robot.commands.coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
-import frc.robot.commands.auto.components.coral.ScoreL1;
 import frc.robot.commands.elevator.IncrementSetpoint;
 import frc.robot.commands.elevator.ResetElevatorPosition;
 import frc.robot.commands.elevator.SetElevatorState;
+import frc.robot.commands.swerve.DriveRobotCentric;
 import frc.robot.commands.swerve.ResetGyro;
-import frc.robot.commands.swerve.StrafeRobotCentric;
 import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.components.drivebase.*;
 import frc.robot.commands.auto.paths.*;
@@ -118,10 +120,11 @@ public class RobotContainer {
     kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
     kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
 
-    pov0.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2));
-    pov180.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2));
-    pov90.whileTrue(new StrafeRobotCentric(m_SwerveSubsystem, 1));
-    pov270.whileTrue(new StrafeRobotCentric(m_SwerveSubsystem, -1));
+
+    pov0.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, DrivebaseConstants.kRobotCentricVel, 0));
+    pov180.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, -DrivebaseConstants.kRobotCentricVel, 0));
+    pov270.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, 0, -DrivebaseConstants.kRobotCentricVel));
+    pov90.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, 0, DrivebaseConstants.kRobotCentricVel));
 
     // Operator gamepad bindings 
 
@@ -133,10 +136,12 @@ public class RobotContainer {
     kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL1), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
     kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
     kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL3
-    kOperator9.whileTrue(new IntakeCoral(m_coralSubsystem, -5)); // IC
-    kOperator10.whileTrue(new IntakeCoral(m_coralSubsystem, 5)); // EC
-    kOperator11.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5)); // EA
-    kOperator12.onTrue(new ResetGyro(m_SwerveSubsystem));
+    kOperator9.onTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kLeftOffset)); // AL
+    kOperator10.onTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
+    kOperator11.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2)); // IL
+    kOperator12.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2)); // DL
+
+
 
   }
 

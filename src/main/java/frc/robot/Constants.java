@@ -146,7 +146,6 @@ public final class Constants {
   }
 
   public static class DrivebaseConstants {
-    // Physical constants
   
    
     // public static final double kWheelBase = Units.inchesToMeters(20);/* the distance between the front and rear wheels */
@@ -160,7 +159,21 @@ public final class Constants {
     // 2025 nameless bot constants
     public static final double kWheelBase = Units.inchesToMeters(26.125);
     public static final double kTrackWidth = Units.inchesToMeters(23.75);
+
     public static final double kAutoSpeedMultiplier = 0.8;
+
+    public static final double kRobotCentricVel = 0.1;
+  }
+
+  public static class VisionConstants {
+    public static final double kLeftOffset = 0;
+    public static final double kRightOffset = 0;
+
+    public static final double kOffsetTolerance = 0.1;
+
+    public static final double kP = 0.001;
+    public static final double kI = 0.00;
+    public static final double kD = 0.00;
 
   }
 }
