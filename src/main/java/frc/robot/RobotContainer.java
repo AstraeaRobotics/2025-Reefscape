@@ -135,8 +135,8 @@ public class RobotContainer {
     kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL1), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
     kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
     kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL3
-    kOperator9.onTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kLeftOffset)); // AL
-    kOperator10.onTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
+    kOperator9.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kLeftOffset)); // AL
+    kOperator10.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
     kOperator11.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2)); // IL
     kOperator12.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2)); // DL
 

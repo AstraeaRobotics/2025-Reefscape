@@ -5,6 +5,7 @@
 package frc.robot.commands.vision;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -31,9 +32,9 @@ public class AlignX extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    offsetController = new PIDController(0.001, 0, 0);
-    offsetController.setSetpoint(setpoint);
-    offsetController.setTolerance(0.01);
+    offsetController = new PIDController(0.006, 0, 0);
+    // offsetController.setSetpoint(setpoint);
+    // offsetController.setTolerance(0.01);
 
     tx = LimelightHelpers.getTX("limelight");
   }
@@ -42,8 +43,10 @@ public class AlignX extends Command {
   @Override
   public void execute() {
     tx = LimelightHelpers.getTX("limelight");
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("limelight pid output", offsetController.calculate(tx));
 
-    m_SwerveSubsystem.drive(SwerveUtil.driveInputToChassisSpeeds(offsetController.calculate(tx), 0, 0, 0), false);
+    m_SwerveSubsystem.drive(SwerveUtil.driveInputToChassisSpeeds(-offsetController.calculate(tx, setpoint), 0, 0, 0), false);
   }
 
   // Called once the command ends or is interrupted.
@@ -55,6 +58,7 @@ public class AlignX extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return offsetController.atSetpoint();
+    // return offsetController.atSetpoint();
+    return false;
   }
 }

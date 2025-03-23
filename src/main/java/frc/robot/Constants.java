@@ -95,7 +95,7 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kRest(0),
-      kSource(22), // needed to test for these values
+      kSource(23), // needed to test for these values 22
       kProcessor(21),
       kCL1(3.5),
       kCL2(21.5),
@@ -166,8 +166,8 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final double kLeftOffset = 0;
-    public static final double kRightOffset = 0;
+    public static final double kLeftOffset = 13;
+    public static final double kRightOffset = -15;
 
     public static final double kOffsetTolerance = 0.1;
 
