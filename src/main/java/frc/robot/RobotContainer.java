@@ -19,7 +19,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.Coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.IncrementSetpoint;
@@ -30,6 +29,7 @@ import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.paths.*;
+import frc.robot.commands.coral.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
