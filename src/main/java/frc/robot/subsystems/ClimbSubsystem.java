@@ -15,7 +15,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -36,7 +35,7 @@ public class ClimbSubsystem extends SubsystemBase {
   NeutralOut brake;
 
   public ClimbSubsystem() {
-    m_climbMotor = new TalonFX(0);
+    m_climbMotor = new TalonFX(7);
     m_climbConfigs = new Slot0Configs();
 
     configureMotors();
@@ -80,7 +79,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
     // SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
-    spinClimbMotorPosition(desiredSetpoint);
+    // spinClimbMotorPosition(desiredSetpoint);
   }
 }
 
