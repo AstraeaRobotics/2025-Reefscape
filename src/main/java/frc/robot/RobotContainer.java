@@ -19,7 +19,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.coral.*;
+import frc.robot.commands.Coral.*;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.IncrementSetpoint;
@@ -139,9 +139,6 @@ public class RobotContainer {
     kOperator10.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
     kOperator11.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2)); // IL
     kOperator12.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2)); // DL
-
-
-
   }
 
   /**
