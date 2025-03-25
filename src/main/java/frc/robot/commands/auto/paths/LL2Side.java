@@ -29,12 +29,21 @@ public class LL2Side extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     // 50.5 INCHES
     // 2.73, -1.0
-    addCommands(
-    new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 0, 2.73, 0)), 
-    new ParallelDeadlineGroup(new WaitCommand(1.5), new TurnToAngle(m_SwerveSubsystem, 60)), 
-    new ParallelDeadlineGroup(new WaitCommand(1), new SetCoralState(m_CoralSubsystem, CoralStates.kL2), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2)), 
-    new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 1, 0, 60)), 
-    new ParallelDeadlineGroup(new WaitCommand(1), new IntakeCoral(m_CoralSubsystem, 5)), 
-    new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_CoralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest)));
+  //   addCommands(
+  //   new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 0, 2.73, 0)), 
+  //   new ParallelDeadlineGroup(new WaitCommand(1.5), new TurnToAngle(m_SwerveSubsystem, 60)), 
+  //   new ParallelDeadlineGroup(new WaitCommand(1), new SetCoralState(m_CoralSubsystem, CoralStates.kL2), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2)), 
+  //   new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 1, 0, 60)), 
+  //   new ParallelDeadlineGroup(new WaitCommand(1), new IntakeCoral(m_CoralSubsystem, 5)), 
+  //   new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_CoralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest)));
+  // }
+  addCommands(
+      new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 0, -2.73, 180)), 
+      new ParallelDeadlineGroup(new WaitCommand(1.5), new TurnToAngle(m_SwerveSubsystem, 240)), 
+      new ParallelDeadlineGroup(new WaitCommand(1), new SetCoralState(m_CoralSubsystem, CoralStates.kL2), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2)), 
+      new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, -1, 0, 240)), 
+      new ParallelDeadlineGroup(new WaitCommand(1), new IntakeCoral(m_CoralSubsystem, 5)), 
+      new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_CoralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest))
+      );
   }
 }

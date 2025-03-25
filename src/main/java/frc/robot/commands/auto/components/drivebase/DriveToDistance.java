@@ -64,7 +64,7 @@ public class DriveToDistance extends Command {
       this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, 0, rotationController.calculate(this.m_swerveSubsystem.getHeading(), desiredHeading), m_swerveSubsystem.getHeading()), false);
     } 
     else {
-      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, yDriveSpeed, SwerveUtil.driftCorrection(initialYaw, this.m_swerveSubsystem.getHeading()), m_swerveSubsystem.getHeading()), false);
+      this.m_swerveSubsystem.drive(SwerveUtil.autoInputToChassisSpeeds(xDriveSpeed, yDriveSpeed, rotationController.calculate(this.m_swerveSubsystem.getHeading(), desiredHeading), m_swerveSubsystem.getHeading()), false);
     }
 
     // SmartDashboard.putNumber("Encoder Position X: ", this.m_swerveSubsystem.getEncoderPosition() * Math.cos(angle));
