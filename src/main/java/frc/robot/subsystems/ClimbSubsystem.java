@@ -32,20 +32,21 @@ public class ClimbSubsystem extends SubsystemBase {
   PositionVoltage m_climbPosition;
   // VelocityVoltage m_climbVelocity;
   ClimbStates m_climbState;
-  double desiredSetpoint;
-  Limelight m_Limelight;
+  double desiredSetpoint;  
+  NeutralOut brake;
 
   public ClimbSubsystem() {
     m_climbMotor = new TalonFX(0);
     m_climbConfigs = new Slot0Configs();
-    //configureMotors();
+
+    configureMotors();
+
     m_climbPosition = new PositionVoltage(0).withSlot(0);
-    // m_climbVelocity = new VelocityVoltage(0).withSlot(0);
+    brake = new NeutralOut();
     
     m_climbState = ClimbStates.kTop;
     desiredSetpoint = m_climbState.getClimbSetpoint();
 
-    m_Limelight = new Limelight();
   }
   public void configureMotors() {
     m_climbConfigs.kS = 0.0;
@@ -54,6 +55,10 @@ public class ClimbSubsystem extends SubsystemBase {
     m_climbConfigs.kI = 0.0;
     m_climbConfigs.kD = 0.0;
 
+    m_climbMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_climbMotor.getConfigurator().apply(m_climbConfigs);
+
+    m_climbMotor.setPosition(0);
   }
   public void spinClimbMotorPosition(double position) {
     m_climbMotor.setControl(m_climbPosition.withPosition(position));
@@ -75,7 +80,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
     // SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
-    SmartDashboard.putNumber("Limelight TX", m_Limelight.getTx());
+    spinClimbMotorPosition(desiredSetpoint);
   }
 }
 
