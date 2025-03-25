@@ -22,7 +22,6 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.Constants.ClimbConstants.ClimbStates;
-import frc.robot.utils.Limelight;
 
 public class ClimbSubsystem extends SubsystemBase {
 
