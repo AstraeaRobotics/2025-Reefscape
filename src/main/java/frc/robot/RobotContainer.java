@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.AlgaeConstants.AlgaeStates;
+import frc.robot.Constants.ClimbConstants.ClimbStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 import frc.robot.commands.algae.IntakeAlgae;
@@ -29,6 +30,8 @@ import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.paths.*;
+import frc.robot.commands.climb.SetClimbState;
+import frc.robot.commands.climb.SpinClimbMotor;
 import frc.robot.commands.coral.*;
 
 /**
@@ -117,8 +120,10 @@ public class RobotContainer {
     kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
     kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
-    kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
-    kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    // kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
+    // kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    kSquare.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kTop));
+    kCircle.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kGround));
 
 
     pov0.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, DrivebaseConstants.kRobotCentricVel, 0));

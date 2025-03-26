@@ -180,7 +180,7 @@ public final class Constants {
 
     public enum ClimbStates {
       kTop(0), //Placeholders, have to test for values
-      kGround(0);
+      kGround(-45);
   
       private double climbSetpoint;
       private ClimbStates(double climbSetpoint){

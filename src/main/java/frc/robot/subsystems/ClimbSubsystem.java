@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,6 +30,7 @@ public class ClimbSubsystem extends SubsystemBase {
   
   Slot0Configs m_climbConfigs;
   PositionVoltage m_climbPosition;
+  VelocityVoltage m_climbVelocity;
   // VelocityVoltage m_climbVelocity;
   ClimbStates m_climbState;
   double desiredSetpoint;  
@@ -40,6 +42,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     configureMotors();
 
+    m_climbVelocity = new VelocityVoltage(0).withSlot(0);
     m_climbPosition = new PositionVoltage(0).withSlot(0);
     brake = new NeutralOut();
     
@@ -48,9 +51,9 @@ public class ClimbSubsystem extends SubsystemBase {
 
   }
   public void configureMotors() {
-    m_climbConfigs.kS = 0.0;
-    m_climbConfigs.kV = 0.0;
-    m_climbConfigs.kP = 0.0;
+    m_climbConfigs.kS = 0.13;
+    m_climbConfigs.kV = 0.1;
+    m_climbConfigs.kP = 0.25;
     m_climbConfigs.kI = 0.0;
     m_climbConfigs.kD = 0.0;
 
@@ -62,11 +65,18 @@ public class ClimbSubsystem extends SubsystemBase {
   public void spinClimbMotorPosition(double position) {
     m_climbMotor.setControl(m_climbPosition.withPosition(position));
   }
+  public void spinClimbMotorVelocity(double velocity) {
+    m_climbMotor.setControl(m_climbVelocity.withVelocity(velocity));
+  }
   public double getClimbPosition() {
     return m_climbMotor.getPosition().getValueAsDouble();
   }
   public double getClimbError() {
     return m_climbMotor.getClosedLoopError().getValueAsDouble();
+  }
+
+  public void setPivotVoltage(double voltage) {
+    m_climbMotor.setVoltage(voltage);
   }
 
   public void setClimbState (ClimbStates tempState) {
@@ -79,7 +89,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
     // SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
-    // spinClimbMotorPosition(desiredSetpoint);
+    spinClimbMotorPosition(desiredSetpoint);
   }
 }
 
