@@ -95,7 +95,7 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kRest(0),
-      kSource(23), // needed to test for these values 22
+      kSource(22), // needed to test for these values 22
       kProcessor(21),
       kCL1(3.5),
       kCL2(21.5),

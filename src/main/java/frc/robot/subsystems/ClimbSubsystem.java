@@ -89,7 +89,7 @@ public class ClimbSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Climb Position", getClimbPosition());
     // SmartDashboard.putNumber("Climb Velocity", getClimbVelocity());
-    spinClimbMotorPosition(desiredSetpoint);
+    // spinClimbMotorPosition(desiredSetpoint);
   }
 }
 

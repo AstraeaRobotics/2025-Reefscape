@@ -122,9 +122,10 @@ public class RobotContainer {
     kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
     // kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
     // kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
-    kSquare.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kTop));
-    kCircle.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kGround));
-
+    // kSquare.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kTop));
+    // kCircle.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kGround));
+    kSquare.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, -4));
+    kCircle.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, 4));
 
     pov0.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, DrivebaseConstants.kRobotCentricVel, 0));
     pov180.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, -DrivebaseConstants.kRobotCentricVel, 0));
