@@ -20,6 +20,7 @@ import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.ClimbConstants.ClimbStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
+import frc.robot.commands.algae.IncrementAlgaeSetpoint;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.IncrementSetpoint;
@@ -30,8 +31,6 @@ import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.paths.*;
-import frc.robot.commands.climb.SetClimbState;
-import frc.robot.commands.climb.SpinClimbMotor;
 import frc.robot.commands.coral.*;
 
 /**
@@ -46,7 +45,7 @@ public class RobotContainer {
   private final CoralSubsystem m_coralSubsystem = new CoralSubsystem();
   private final AlgaeSubsystem m_AlgaeSubsystem = new AlgaeSubsystem();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-  private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
+  // private final ClimbSubsystem m_ClimbSubsystem = new ClimbSubsystem();
 
   private final PS4Controller m_Controller = new PS4Controller(0);
   public static final GenericHID operatorGamepad = new GenericHID(1);
@@ -120,15 +119,13 @@ public class RobotContainer {
     kR1.whileTrue(new IntakeCoral(m_coralSubsystem, -5));
     kL1.whileTrue(new IntakeCoral(m_coralSubsystem, 5));
     kTriangle.whileTrue(new ExtakeL1(m_coralSubsystem));
-    // kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
-    // kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
-    // kSquare.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kTop));
-    // kCircle.onTrue(new SetClimbState(m_ClimbSubsystem, ClimbStates.kGround));
-    kSquare.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, -4));
-    kCircle.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, 4));
+    kSquare.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, 5));
+    kCircle.whileTrue(new IntakeAlgae(m_AlgaeSubsystem, -5));
+    // kSquare.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, -4));
+    // kCircle.whileTrue(new SpinClimbMotor(m_ClimbSubsystem, 4));
 
-    pov0.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, DrivebaseConstants.kRobotCentricVel, 0));
-    pov180.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, -DrivebaseConstants.kRobotCentricVel, 0));
+    pov0.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, -DrivebaseConstants.kRobotCentricVel, 0));
+    pov180.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, DrivebaseConstants.kRobotCentricVel, 0));
     pov270.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, 0, -DrivebaseConstants.kRobotCentricVel));
     pov90.whileTrue(new DriveRobotCentric(m_SwerveSubsystem, 0, DrivebaseConstants.kRobotCentricVel));
 
@@ -142,10 +139,12 @@ public class RobotContainer {
     kOperator6.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl1), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL1), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL1
     kOperator7.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAL2), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL2), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL2
     kOperator8.onTrue(new ParallelCommandGroup(new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kAl3), new SetAlgaeState(m_AlgaeSubsystem, AlgaeStates.kL3), new SetCoralState(m_coralSubsystem, CoralStates.kRest))); // AL3
-    kOperator9.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kLeftOffset)); // AL
-    kOperator10.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
-    kOperator11.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 2)); // IL
-    kOperator12.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -2)); // DL
+    // kOperator9.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kLeftOffset)); // AL
+    // kOperator10.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
+    kOperator9.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 1)); // IL
+    kOperator10.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -1)); // DL
+    kOperator11.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, 0.1));
+    kOperator12.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, -0.1));
   }
 
   /**

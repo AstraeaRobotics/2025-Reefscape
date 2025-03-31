@@ -67,7 +67,7 @@ public final class Constants {
     
     public enum AlgaeStates{
       kL1(0.15),
-      kL2(0.2),
+      kL2(0.27),
       kL3(0.35),
       kIn(0);
 
@@ -95,13 +95,13 @@ public final class Constants {
     
     public enum ElevatorStates{  // Coral 1,2,3,4, Alage: 2,3 Proccesser, Source
       kRest(0),
-      kSource(22), // needed to test for these values 22
-      kProcessor(21),
+      kSource(21), // needed to test for these values 22
+      kProcessor(23),
       kCL1(3.5),
       kCL2(21.5),
-      kCL3(45),
+      kCL3(43),
       kAl1(10),
-      kAL2(35),
+      kAL2(37),
       kAl3(43);
 
 

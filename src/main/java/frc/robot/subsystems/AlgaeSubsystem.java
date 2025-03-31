@@ -45,7 +45,7 @@ public class AlgaeSubsystem extends SubsystemBase {
   private final SimpleMotorFeedforward m_intakeFeedForward;
   private final ArmFeedforward m_pivotFeedforward;
   private AlgaeStates currState;
-  private double desiredSetpoint;
+  public double desiredSetpoint;
   
   
   public AlgaeSubsystem() {

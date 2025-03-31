@@ -11,6 +11,7 @@ import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
 import frc.robot.commands.auto.components.drivebase.TurnToAngle;
 import frc.robot.commands.auto.components.drivebase.TurnWheelsAndDrive;
+import frc.robot.commands.coral.ExtakeL1;
 import frc.robot.commands.coral.IntakeCoral;
 import frc.robot.commands.coral.SetCoralState;
 import frc.robot.commands.elevator.SetElevatorState;
@@ -36,5 +37,11 @@ public class RL2Side extends SequentialCommandGroup {
     new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, -1, 0, 300)), 
     new ParallelDeadlineGroup(new WaitCommand(1), new IntakeCoral(m_CoralSubsystem, 5)), 
     new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_CoralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest)));
+      // new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 0, -2.7, 180)), 
+      // new ParallelDeadlineGroup(new WaitCommand(1.5), new TurnToAngle(m_SwerveSubsystem, 120)), 
+      // new ParallelDeadlineGroup(new WaitCommand(1), new SetCoralState(m_CoralSubsystem, CoralStates.kL2), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL2)), 
+      // new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_SwerveSubsystem, 1, 0, 120)), 
+      // new ParallelDeadlineGroup(new WaitCommand(1), new ExtakeL1(m_CoralSubsystem)), 
+      // new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_CoralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest)));
   }
 }
