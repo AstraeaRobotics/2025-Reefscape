@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 // import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseConstants;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.SwerveUtil;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -47,6 +49,7 @@ public class SwerveSubsystem extends SubsystemBase {
   SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
   StructPublisher<Pose2d> publisher;
+  StructPublisher<Pose2d> limelightPublisher;
   StructPublisher<Pose2d> arrayPublisher;
 
   DoubleSupplier m_driveX;
@@ -65,6 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
+    limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight Pose 3D", Pose2d.struct).publish();
     
     // try{
     //   config = RobotConfig.fromGUISettings();
@@ -156,24 +160,24 @@ public class SwerveSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("heading", getHeading());
 
 
-    // LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    // Boolean doRejectUpdate = false;
-    // if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-    // {
-    //   doRejectUpdate = true;
-    // }
-    // if(mt2.tagCount == 0)
-    // {
-    //   doRejectUpdate = true;
-    // }
-    // if(!doRejectUpdate)
-    // {
-    //   swerveDrivePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-    //   swerveDrivePoseEstimator.addVisionMeasurement(
-    //       mt2.pose,
-    //       mt2.timestampSeconds);
-    // }
-    publisher.set(getPose());
+    LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    Boolean doRejectUpdate = false;
+    if(Math.abs(gyro.getRate()) > 360) // if our angular velocity is greater than 360 degrees per second, ignore vision updates
+    {
+      doRejectUpdate = true;
+    }
+    if(mt2.tagCount == 0)
+    {
+      doRejectUpdate = true;
+    }
+    if(!doRejectUpdate)
+    {
+      swerveDrivePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+      swerveDrivePoseEstimator.addVisionMeasurement(
+          mt2.pose,
+          mt2.timestampSeconds);
+    }
+    limelightPublisher.set(getPose());
   }
 }
