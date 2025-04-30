@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
-  StructPublisher<Pose2d> publisher;
+  StructPublisher<Pose2d> odometryPublisher;
   StructPublisher<Pose2d> limelightPublisher;
   StructPublisher<Pose2d> arrayPublisher;
 
@@ -67,8 +67,8 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveModules[3] = new SwerveModule(18, 17, 0, "back right", true);
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
-    publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
-    limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight Pose 3D", Pose2d.struct).publish();
+    odometryPublisher = NetworkTableInstance.getDefault().getStructTopic("Odometry Pose 2D", Pose2d.struct).publish();
+    limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight Pose 2D", Pose2d.struct).publish();
     
     // try{
     //   config = RobotConfig.fromGUISettings();
@@ -156,12 +156,11 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
+    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
+    odometryPublisher.set(swerveDrivePoseEstimator.getEstimatedPosition(), 0);
     // SmartDashboard.putNumber("heading", getHeading());
 
-    double yaw = -getHeading();
-
-    LimelightHelpers.SetRobotOrientation("limelight", yaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     Boolean doRejectUpdate = false;
     if(Math.abs(gyro.getRate()) > 360) // if our angular velocity is greater than 360 degrees per second, ignore vision updates
@@ -174,11 +173,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     if(!doRejectUpdate)
     {
-      swerveDrivePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-      swerveDrivePoseEstimator.addVisionMeasurement(
-          mt2.pose,
-          mt2.timestampSeconds);
+      int timestampMicroseconds = (int)Math.floor(mt2.timestampSeconds * 1000);
+      limelightPublisher.set(mt2.pose, timestampMicroseconds);
     }
-    limelightPublisher.set(getPose());
+    
   }
 }
