@@ -20,7 +20,7 @@ import frc.robot.Constants.AlgaeConstants.AlgaeStates;
 import frc.robot.Constants.ClimbConstants.ClimbStates;
 import frc.robot.Constants.CoralConstants.CoralStates;
 import frc.robot.Constants.ElevatorConstants.ElevatorStates;
-import frc.robot.commands.algae.IncrementAlgaeSetpoint;
+//import frc.robot.commands.algae.IncrementAlgaeSetpoint;
 import frc.robot.commands.algae.IntakeAlgae;
 import frc.robot.commands.algae.SetAlgaeState;
 import frc.robot.commands.elevator.IncrementSetpoint;
@@ -143,8 +143,8 @@ public class RobotContainer {
     // kOperator10.whileTrue(new AlignX(m_SwerveSubsystem, VisionConstants.kRightOffset)); // AR
     kOperator9.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, 1)); // IL
     kOperator10.onTrue(new IncrementSetpoint(m_ElevatorSubsystem, -1)); // DL
-    kOperator11.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, 0.1));
-    kOperator12.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, -0.1));
+    // kOperator11.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, 0.1));
+    // kOperator12.onTrue(new IncrementAlgaeSetpoint(m_AlgaeSubsystem, -0.1));
   }
 
   public Command getAutonomousCommand() {

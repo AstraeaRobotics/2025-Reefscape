@@ -156,11 +156,12 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
+    //swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
     // SmartDashboard.putNumber("heading", getHeading());
 
+    double yaw = -getHeading();
 
-    LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.SetRobotOrientation("limelight", yaw, 0.0, 0.0, 0.0, 0.0, 0.0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     Boolean doRejectUpdate = false;
     if(Math.abs(gyro.getRate()) > 360) // if our angular velocity is greater than 360 degrees per second, ignore vision updates
