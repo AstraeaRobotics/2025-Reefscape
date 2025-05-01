@@ -47,12 +47,11 @@ public class SwerveSubsystem extends SubsystemBase {
   Translation2d m_backLeftLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, DrivebaseConstants.kTrackWidth / 2);
   Translation2d m_backRightLocation = new Translation2d(-DrivebaseConstants.kWheelBase / 2, -DrivebaseConstants.kTrackWidth / 2); 
 
-  SwerveDrivePoseEstimator swerveDrivePoseEstimator;
+  SwerveDrivePoseEstimator odometryPoseEstimator;
+  Pose2d limelightPose;
 
   StructPublisher<Pose2d> odometryPublisher;
-  //no subscriber for this publisher because we are keeping track of it locally as well through swerveDrivePoseEstimator
   StructPublisher<Pose2d> limelightPublisher;
-  StructSubscriber<Pose2d> limelightSubscriber;
   StructPublisher<Pose2d> arrayPublisher;
 
   DoubleSupplier m_driveX;
@@ -69,11 +68,11 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveModules[2] = new SwerveModule(16, 15, 0, "back left", true);
     swerveModules[3] = new SwerveModule(18, 17, 0, "back right", true);
     
-    swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
+    odometryPoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
+    limelightPose = new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)); //default pose 0, 0, 0
 
     odometryPublisher = NetworkTableInstance.getDefault().getStructTopic("Odometry_Pose_2D", Pose2d.struct).publish();
     limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight_Pose_2D", Pose2d.struct).publish();
-    limelightSubscriber = NetworkTableInstance.getDefault().getStructTopic("Limelight_Pose_2D", Pose2d.struct).subscribe(new Pose2d());
     
     // try{
     //   config = RobotConfig.fromGUISettings();
@@ -136,11 +135,11 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getOdometryPose() {
-    return swerveDrivePoseEstimator.getEstimatedPosition();
+    return odometryPoseEstimator.getEstimatedPosition();
   }
 
   public Pose2d getLimelightPose() {
-    return limelightSubscriber.get();
+    return limelightPose;
   }
 
   public void resetGyro() {
@@ -149,7 +148,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void resetRobotPose(Pose2d pose) {
-    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
+    odometryPoseEstimator.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
   }
 
   public void resetEncoders() {
@@ -165,11 +164,11 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
-    odometryPublisher.set(swerveDrivePoseEstimator.getEstimatedPosition(), 0);
+    odometryPoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
+    odometryPublisher.set(odometryPoseEstimator.getEstimatedPosition(), 0);
     // SmartDashboard.putNumber("heading", getHeading());
 
-    LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("limelight", odometryPoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     Boolean doRejectUpdate = false;
     if(Math.abs(gyro.getRate()) > 360) // if our angular velocity is greater than 360 degrees per second, ignore vision updates
@@ -183,6 +182,7 @@ public class SwerveSubsystem extends SubsystemBase {
     if(!doRejectUpdate)
     {
       int timestampMicroseconds = (int)Math.floor(mt2.timestampSeconds * 1000);
+      limelightPose = mt2.pose;
       limelightPublisher.set(mt2.pose, timestampMicroseconds);
     }
     
