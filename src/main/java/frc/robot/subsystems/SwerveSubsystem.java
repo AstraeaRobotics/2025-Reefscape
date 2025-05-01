@@ -27,6 +27,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -49,7 +50,9 @@ public class SwerveSubsystem extends SubsystemBase {
   SwerveDrivePoseEstimator swerveDrivePoseEstimator;
 
   StructPublisher<Pose2d> odometryPublisher;
+  //no subscriber for this publisher because we are keeping track of it locally as well through swerveDrivePoseEstimator
   StructPublisher<Pose2d> limelightPublisher;
+  StructSubscriber<Pose2d> limelightSubscriber;
   StructPublisher<Pose2d> arrayPublisher;
 
   DoubleSupplier m_driveX;
@@ -67,8 +70,10 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveModules[3] = new SwerveModule(18, 17, 0, "back right", true);
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
-    odometryPublisher = NetworkTableInstance.getDefault().getStructTopic("Odometry Pose 2D", Pose2d.struct).publish();
-    limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight Pose 2D", Pose2d.struct).publish();
+
+    odometryPublisher = NetworkTableInstance.getDefault().getStructTopic("Odometry_Pose_2D", Pose2d.struct).publish();
+    limelightPublisher = NetworkTableInstance.getDefault().getStructTopic("Limelight_Pose_2D", Pose2d.struct).publish();
+    limelightSubscriber = NetworkTableInstance.getDefault().getStructTopic("Limelight_Pose_2D", Pose2d.struct).subscribe(new Pose2d());
     
     // try{
     //   config = RobotConfig.fromGUISettings();
@@ -130,8 +135,12 @@ public class SwerveSubsystem extends SubsystemBase {
     return (gyro.getYaw() + 360) % 360;
   }
 
-  public Pose2d getPose() {
+  public Pose2d getOdometryPose() {
     return swerveDrivePoseEstimator.getEstimatedPosition();
+  }
+
+  public Pose2d getLimelightPose() {
+    return limelightSubscriber.get();
   }
 
   public void resetGyro() {
