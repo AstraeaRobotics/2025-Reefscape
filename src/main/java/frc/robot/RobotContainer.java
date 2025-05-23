@@ -31,7 +31,7 @@ import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.commands.vision.AlignX;
 import frc.robot.subsystems.*;
 import frc.robot.commands.auto.paths.*;
-import frc.robot.commands.coral.*;
+import frc.robot.commands.Coral.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
