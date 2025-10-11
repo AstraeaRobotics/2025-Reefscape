@@ -19,6 +19,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseModuleConstants;
 import frc.robot.utils.SwerveUtil;
@@ -44,6 +46,10 @@ public class SwerveModule extends SubsystemBase {
 
   private Boolean isInverted;
 
+  // Simulation variables
+  private double simDrivePosition = 0;
+  private double simTurnPosition = 0;
+
   public SwerveModule(int turnMotorID, int driveMotorID, int angularOffset, String moduleName, Boolean isInverted) {
     turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
@@ -62,8 +68,6 @@ public class SwerveModule extends SubsystemBase {
     this.moduleState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
     this.isInverted = isInverted;
-    // ks - 0.25
-    // kv - 6.6
 
     driveFF = new SimpleMotorFeedforward(DrivebaseModuleConstants.driveKS, DrivebaseModuleConstants.driveKV);
 
@@ -100,14 +104,24 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getDistance(){
+    if (RobotBase.isSimulation()) {
+      return simDrivePosition;
+    }
     return driveEncoder.getPosition();
   }
 
   public void resetEncoder() {
-    driveEncoder.setPosition(0);
+    if (RobotBase.isSimulation()) {
+      simDrivePosition = 0;
+    } else {
+      driveEncoder.setPosition(0);
+    }
   }
 
   public double getAngle() {
+    if (RobotBase.isSimulation()) {
+      return (simTurnPosition + angularOffset) % 360;
+    }
     return (turnEncoder.getPosition() + angularOffset) % 360;
   }
 
@@ -129,16 +143,54 @@ public class SwerveModule extends SubsystemBase {
   public void drive(boolean slowMode) {
     double[] optimizedModule = SwerveUtil.optimizeModule(getAngle(), moduleState.angle.getDegrees() + 180, moduleState.speedMetersPerSecond);
 
-    turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
-    driveMotor.setVoltage(MathUtil.clamp(slowMode ? driveFF.calculate(optimizedModule[1] / 2) : driveFF.calculate(optimizedModule[1]), -6, 6));
+    if (RobotBase.isSimulation()) {
+      // Update simulated turn position - make it faster for simulation
+      double targetAngle = optimizedModule[0];
+      double angleDiff = targetAngle - simTurnPosition;
+      
+      // Normalize angle difference to [-180, 180]
+      while (angleDiff > 180) angleDiff -= 360;
+      while (angleDiff < -180) angleDiff += 360;
+      
+      // Move towards target angle (faster in sim)
+      simTurnPosition += angleDiff * 0.3; // Increased from 0.1
+      simTurnPosition = (simTurnPosition + 360) % 360;
+
+      // Update simulated drive position based on speed
+      double speed = optimizedModule[1]; // Already in m/s
+      if (slowMode) speed /= 2;
+      
+      // Integrate velocity to get position (speed * time)
+      double deltaPosition = speed * 0.02; // 20ms = 0.02s loop time
+      simDrivePosition += deltaPosition;
+      
+      // DEBUG
+      if (Math.abs(speed) > 0.01) {
+        System.out.println(moduleName + " driving - Speed: " + speed + " Delta: " + deltaPosition + " Total: " + simDrivePosition);
+      }
+      
+    } else {
+      // Real robot control
+      turnMotor.set(-turnPIDController.calculate(getAngle(), optimizedModule[0]));
+      driveMotor.setVoltage(MathUtil.clamp(slowMode ? driveFF.calculate(optimizedModule[1] / 2) : driveFF.calculate(optimizedModule[1]), -6, 6));
+    }
   }
 
   public double getVelocity() {
+    if (RobotBase.isSimulation()) {
+      return moduleState.speedMetersPerSecond;
+    }
     return driveEncoder.getVelocity();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // Debug output in simulation
+    if (RobotBase.isSimulation()) {
+      SmartDashboard.putNumber(moduleName + " Sim Angle", simTurnPosition);
+      SmartDashboard.putNumber(moduleName + " Sim Distance", simDrivePosition);
+      SmartDashboard.putNumber(moduleName + " Desired Speed", moduleState.speedMetersPerSecond);
+      SmartDashboard.putNumber(moduleName + " Desired Angle", moduleState.angle.getDegrees());
+    }
   }
 }

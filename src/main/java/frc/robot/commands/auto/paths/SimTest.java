@@ -20,20 +20,16 @@ import frc.robot.subsystems.SwerveSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class L1Mid extends SequentialCommandGroup {
+public class SimTest extends SequentialCommandGroup {
   /** Creates a new L1Mid. */
-  public L1Mid(SwerveSubsystem m_swerveSubsystem, CoralSubsystem m_coralSubsystem, ElevatorSubsystem m_ElevatorSubsystem) {
+  public SimTest(SwerveSubsystem m_swerveSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     // addCommands(new TurnWheelsAndDrive(m_swerveSubsystem, 0, 2.05, 0), new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_coralSubsystem, CoralStates.kL1), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1)), new ParallelDeadlineGroup(new WaitCommand(1), new ExtakeL1(m_coralSubsystem)), new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest)));
     System.out.println("=== L1Mid Auto Created ===");
     
     addCommands(
-      new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_coralSubsystem, CoralStates.kL1), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kCL1)),
-      new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_swerveSubsystem, 0, 20.05, 0)),
-      new ParallelDeadlineGroup(new WaitCommand(1), new ExtakeL1(m_coralSubsystem)),
-      new ParallelDeadlineGroup(new WaitCommand(1.5), new SetCoralState(m_coralSubsystem, CoralStates.kRest), new SetElevatorState(m_ElevatorSubsystem, ElevatorStates.kRest))
-    );
+      new ParallelDeadlineGroup(new WaitCommand(2.7), new TurnWheelsAndDrive(m_swerveSubsystem, 0, 20, 0)), new TurnWheelsAndDrive(m_swerveSubsystem, 2, 0, 30));
     
     System.out.println("=== L1Mid Auto Commands Added ===");
   }

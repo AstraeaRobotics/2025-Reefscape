@@ -3,31 +3,15 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.121,
-        "y": 4.063486842105263
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 7.109188776219093,
-        "y": 4.136158685245812
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 6.421,
         "y": 4.063
       },
-      "prevControl": {
-        "x": 6.645312853675408,
-        "y": 3.9526200032796015
-      },
+      "prevControl": null,
       "nextControl": {
         "x": 6.196687146324593,
         "y": 4.173379996720398
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": null
     },
     {
@@ -47,32 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Scoring",
-      "waypointRelativePos": 1.048128342245991,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "deadline",
-        "data": {
-          "commands": [
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 3.0
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "ExtakeL1"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -89,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -179.078116910293
   },
   "useDefaultConstraints": true
 }

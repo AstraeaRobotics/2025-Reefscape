@@ -4,12 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.cameraserver.CameraServer;
+
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+
   private final RobotContainer m_robotContainer;
 
   /**
@@ -24,49 +27,97 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
     CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
-}
+  }
 
+  /**
+   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * that you want ran during disabled, autonomous, teleoperated and test.
+   *
+   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * SmartDashboard integrated updating.
+   */
   @Override
   public void robotPeriodic() {
+    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
+    // commands, running already-scheduled commands, removing finished or interrupted commands,
+    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
+  /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-  }
+  public void disabledInit() {}
 
   @Override
+  public void disabledPeriodic() {}
+
+  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  @Override
   public void autonomousInit() {
+    // IMPORTANT: Set the starting position for the robot
+    // Field is 16.54m x 8.21m (54ft 3.25in x 26ft 11.25in)
+    // Let's start at the center: (8.27m, 4.1m) facing forward (0 degrees)
+    // Or you can start at a specific alliance station position
+    
+    // Center of field:
+    Pose2d startingPose = new Pose2d(new Translation2d(9.75, 4.1), new Rotation2d(0));
+    
+    // Or bottom left corner (red alliance, left side):
+    // Pose2d startingPose = new Pose2d(new Translation2d(1.5, 1.5), Rotation2d.fromDegrees(0));
+    
+    // Or bottom middle (red alliance, middle):
+    // Pose2d startingPose = new Pose2d(new Translation2d(1.5, 4.1), Rotation2d.fromDegrees(0));
+    
+    m_robotContainer.setStartingPose(startingPose);
+    System.out.println("Starting pose set to: " + startingPose);
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-        m_autonomousCommand.schedule();
+      m_autonomousCommand.schedule();
     }
   }
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
     if (m_autonomousCommand != null) {
-        m_autonomousCommand.cancel();
+      m_autonomousCommand.cancel();
     }
   }
 
+  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
+    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
+  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 
+  /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {}
 
+  /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
-
 }

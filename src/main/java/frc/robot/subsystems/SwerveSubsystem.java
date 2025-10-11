@@ -12,10 +12,6 @@ import com.revrobotics.servohub.ServoHub.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.*;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,10 +23,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.utils.SwerveUtil;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.*;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
@@ -49,7 +51,12 @@ public class SwerveSubsystem extends SubsystemBase {
   StructPublisher<Pose2d> publisher;
   StructPublisher<Pose2d> arrayPublisher;
 
+  private final Field2d m_field = new Field2d();
+
   DoubleSupplier m_driveX;
+
+  // Simulation variables
+  private double simYaw = 0;
 
   RobotConfig config;
 
@@ -65,8 +72,10 @@ public class SwerveSubsystem extends SubsystemBase {
     
     swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getHeading()), getModulePositions(), new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0)));
     publisher = NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
-    
-    try{
+
+    gyro.reset();
+
+      try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       // Handle exception as needed
@@ -88,10 +97,7 @@ public class SwerveSubsystem extends SubsystemBase {
       return false;
     },
     this);
-
-    gyro.reset();
   }
-
   public void drive(ChassisSpeeds speeds, boolean slowMode) {
     SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(speeds);
 
@@ -123,6 +129,9 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
+    if (RobotBase.isSimulation()) {
+      return (simYaw + 360) % 360;
+    }
     return (gyro.getYaw() + 360) % 360;
   }
 
@@ -131,7 +140,11 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void resetGyro() {
-    gyro.reset();
+    if (RobotBase.isSimulation()) {
+      simYaw = 0;
+    } else {
+      gyro.reset();
+    }
     resetRobotPose(new Pose2d(new Translation2d(0, 0), new Rotation2d()));
   }
 
@@ -151,29 +164,26 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // Simulate gyro in simulation
+    if (RobotBase.isSimulation()) {
+      ChassisSpeeds speeds = getRobotRelativeSpeeds();
+      simYaw += Math.toDegrees(speeds.omegaRadiansPerSecond) * 0.02; // 20ms loop time
+    }
+
+    m_field.setRobotPose(getPose());
+
+    // Update pose estimator
     swerveDrivePoseEstimator.update(Rotation2d.fromDegrees(-getHeading()), getModulePositions());
-    // SmartDashboard.putNumber("heading", getHeading());
-
-
-    // LimelightHelpers.SetRobotOrientation("limelight", swerveDrivePoseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    // Boolean doRejectUpdate = false;
-    // if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-    // {
-    //   doRejectUpdate = true;
-    // }
-    // if(mt2.tagCount == 0)
-    // {
-    //   doRejectUpdate = true;
-    // }
-    // if(!doRejectUpdate)
-    // {
-    //   swerveDrivePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-    //   swerveDrivePoseEstimator.addVisionMeasurement(
-    //       mt2.pose,
-    //       mt2.timestampSeconds);
-    // }
+    
+    // Publish to NetworkTables for AdvantageScope
     publisher.set(getPose());
+
+    // Debug info
+    SmartDashboard.putNumber("Gyro Heading", getHeading());
+    SmartDashboard.putNumber("Pose X", getPose().getX());
+    SmartDashboard.putNumber("Pose Y", getPose().getY());
+    SmartDashboard.putNumber("Pose Rotation", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Front Left Distance", swerveModules[0].getDistance());
+    SmartDashboard.putNumber("Front Right Distance", swerveModules[1].getDistance());
   }
 }
